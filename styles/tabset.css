@@ -31,7 +31,7 @@ h5 {
     background-attachment: scroll;
     background-clip: border-box;
     background-color: #CCC;
-    background-image: url(http://localhost/eqman/jquery/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png);
+    background-image: url(../js/jquery/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png);
     background-origin: padding-box;
     background-size: auto;
 }
