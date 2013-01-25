@@ -1,0 +1,96 @@
+/* 
+    Document   : default
+    Created on : Jan 14, 2013, 7:18:16 PM
+    Author     : jaredm
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+body {
+    color: whitesmoke;
+    font-size: 16px;
+    background-color: whitesmoke;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+}
+
+a, a:visited, a:active {
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+a:hover {
+    color: white;
+}
+
+#header, #footer, #main {
+    padding: 0 0 0 4px;
+}
+
+#header {
+    line-height: 75px;
+    height: 70px;
+    font-size: 56px;
+    margin-bottom: 30px;
+    text-transform: capitalize;
+    cursor:default;
+}
+
+#header, #footer {
+    background-color: #555;
+}
+
+#info {
+    color: #555;
+    font-size: 12px;
+    margin-top: -30px;
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+#footer {
+    font-size: 12px;
+    border-top: linen solid 2px;
+}
+
+#main {
+    background-color: #555;
+    min-height: 500px;
+}
+
+#mainc {
+    line-height: 100%;
+}
+
+#nav {
+    height: 500px;
+    float: right;
+    background-color: rgba(255,255,255,.2);
+    margin-right: 1px;
+    margin-top: -10px;
+}
+
+#nav ul {
+    direction: rtl;
+}
+
+ul li a {
+    text-decoration: none;
+}
+
+#navm {
+    text-align: center;
+    font-weight: bold;
+    border-bottom: whitesmoke solid 1px;  
+}
+
+#calendar {
+    font-size: 10px;
+/*    background-color: whitesmoke;
+    color: #555;*/
+    line-height: 100%;
+    padding-top: 10px;
+}

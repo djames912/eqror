@@ -1,0 +1,72 @@
+root { 
+    display: block;
+}
+
+body {
+    background-color: whitesmoke;
+    color: black;
+}
+
+h5 {
+    margin-bottom: -10px;
+}
+
+.header {
+    line-height: 75px;
+    height: 70px;
+    font-size: 56px;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+    cursor:default;
+    background-color: white;
+    border: 1px solid #AAA;
+
+}
+
+.sitetitle {
+    -webkit-background-clip: border-box;
+    -webkit-background-origin: padding-box;
+    -webkit-background-size: auto;
+    -webkit-border-image: none;
+    background-attachment: scroll;
+    background-clip: border-box;
+    background-color: #CCC;
+    background-image: url(http://localhost/eqman/jquery/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png);
+    background-origin: padding-box;
+    background-size: auto;
+}
+
+.shadow {
+    -moz-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+.tabs {
+    position: relative;
+    max-width: 960px;
+    min-width: 960px;
+    /*overflow: hidden;*/
+    padding: 0px;
+    min-height: 580px;
+    -moz-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+#tcal {
+    width: 920px;
+}
+
+.user {
+    margin-bottom: -1em;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: right;
+}
+
+.ellipse {
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+}
