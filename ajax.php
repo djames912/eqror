@@ -60,7 +60,7 @@ if (!isset($REQ__func) || !in_array($REQ__func,$functions)) {
 /*
  * Execute the function and pass args
  */
-$REQ__func($REQ__args);
+$reply = $REQ__func($REQ__args);
 
 
 /*
@@ -68,15 +68,21 @@ $REQ__func($REQ__args);
  */
 
 // Returns roster data as JSON
+//    TODO: only send data if authenticated
 function getroster($args = null) {
     global $rosterdata;
-    echo json_encode($rosterdata);
+    return json_encode($rosterdata);
 }
 
 // Returns event data as JSON
+//    TODO: only send data if authenticated
 function getevents($args = null) {
     global $events;
-    echo json_encode($events);
+    return json_encode($events);
 }
 
+/*
+ * Reply to AJAX request
+ */
+echo $reply;
 ?>
