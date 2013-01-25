@@ -9,8 +9,8 @@
         <link rel="stylesheet" type="text/css" href="styles/tabset.css" />
         <script src="js/jquery/js/jquery-1.8.3.js"></script>
         <script src="js/jquery/js/jquery-ui-1.9.2.custom.min.js"></script>
-        <link rel='stylesheet' type='text/css' href='fullcalendar/fullcalendar.css' />
-        <script type='text/javascript' src='fullcalendar/fullcalendar.js'></script>
+        <link rel='stylesheet' type='text/css' href='js/fullcalendar/fullcalendar.css' />
+        <script type='text/javascript' src='js/fullcalendar/fullcalendar.js'></script>
         <script type='text/javascript' src='js/main.js'></script>
     </head>
     <body>
