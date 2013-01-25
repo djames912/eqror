@@ -1,11 +1,18 @@
+/*
+ * Executes after page load (jQuery)
+ */
 $(function() {
+    // Prep tab data to be jQueryUI-ized
     $( ".tabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
     $( ".tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
-                
+              
+    // Set active tab to tab #4
     var tabs = $( ".tabs" ).tabs();
     $(".tabs").tabs({
         active: 3
     });
+    
+    // Generate fullCalendar object inside #tcal
     $('#tcal').fullCalendar({
         // options
         header: {
@@ -37,6 +44,7 @@ $(function() {
         active: 0
     });
     
+    // Fetch roster and events via AJAX
     loadroster();
     loadevents();
 });
@@ -62,6 +70,7 @@ function submitAJAX(func,jsondata,callback) {
     });
 }
 
+// Takes JSON roster data and populates roster
 function buildroster(jsondata) {
     $.each(jsondata, function() {
         var fam = document.createElement("div")
@@ -76,6 +85,7 @@ function buildroster(jsondata) {
     });
 }
 
+// Takes JSON event data and populates calendar
 function refreshevents(jsondata) {
 //    $('#tcal').fullCalendar({
 //        events: jsondata    
@@ -83,30 +93,37 @@ function refreshevents(jsondata) {
     //$('#tcal').fullCalendar( 'rerenderEvents' );
 }
 
+// Takes JSON announcement data and populates announcements
 function loadannouncements() {
     
 }
 
+// Submits new announcement (then re-fetch announcements)
 function addannouncement() {
     
 }
 
+// Submits announcement change (then re-fetch announcements)
 function editannounement() {
     
 }
 
+// Initiates AJAX call to get roster data, uses buildroster() as callback
 function loadroster() {
     submitAJAX("getroster",null,buildroster);
 }
 
+// Initiates AJAX call to get event data, uses refreshevents() as callback
 function loadevents() {
     submitAJAX("getevents",null,refreshevents);
 }
 
+// Submits roster change(s) (then re-fetches roster)
 function updateroster() {
     
 }
 
+// Submits login authentication request
 function login() {
     
 }

@@ -1,6 +1,18 @@
 <?php
 
+/*
+ * A list of allowed calls
+ */
+$functions = Array('getroster','getevents');
+
+/*
+ * We only allow this method
+ */
 $method = 'POST';
+
+/*
+ * Sample data
+ */
 $rosterdata = json_decode('[{
     "gname": "Jared", 
     "sname": "Meeker", 
@@ -11,12 +23,14 @@ $rosterdata = json_decode('[{
     "hemail": "jared@somedomain.com",
     "wemail": "jared_meeker@something.org"
 }]') or die('cannot decode rosterdata');
-
 $events = json_decode('[{
     "title": "All Day Event",
     "start": "1359035746"
 }]') or die('cannot decode events');
 
+/*
+ * Generic error generator
+ */
 function genErr($msg) {
     $error = Array();
     $error['status'] = 'failed';
@@ -24,24 +38,42 @@ function genErr($msg) {
     return json_encode($error);
 }
 
+/*
+ * Test request method
+ */
 if ($_SERVER['REQUEST_METHOD'] != $method) {
     die(genErr("Cannot process request."));
 }
 
+/*
+ * Import request variables
+ */
 extract($_POST, EXTR_PREFIX_ALL, 'REQ_');
 
-if (!isset($REQ__func)) {
-    die(genErr("Invalid request name: " . $_POST['func']));
+/*
+ * Die if the function isn't specified or isn't one of our accepted ones
+ */
+if (!isset($REQ__func) || !in_array($REQ__func,$functions)) {
+    die(genErr("Unknown request type."));
 }
 
-// Execute our function
+/*
+ * Execute the function and pass args
+ */
 $REQ__func($REQ__args);
 
+
+/*
+ * Available functions
+ */
+
+// Returns roster data as JSON
 function getroster($args = null) {
     global $rosterdata;
     echo json_encode($rosterdata);
 }
 
+// Returns event data as JSON
 function getevents($args = null) {
     global $events;
     echo json_encode($events);
