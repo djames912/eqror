@@ -3,15 +3,15 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title></title>
-        <link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.9.2.custom.min.css" />
-        <link rel="stylesheet" type="text/css" href="960/css/min/960.css" />
-        <link rel="stylesheet" type="text/css" href="960/css/min/text.css" />
+        <link rel="stylesheet" type="text/css" href="js/jquery/css/smoothness/jquery-ui-1.9.2.custom.min.css" />
+        <link rel="stylesheet" type="text/css" href="styles/960/css/min/960.css" />
+        <link rel="stylesheet" type="text/css" href="styles/960/css/min/text.css" />
         <link rel="stylesheet" type="text/css" href="styles/tabset.css" />
-        <script src="jquery/js/jquery-1.8.3.js"></script>
-        <script src="jquery/js/jquery-ui-1.9.2.custom.min.js"></script>
+        <script src="js/jquery/js/jquery-1.8.3.js"></script>
+        <script src="js/jquery/js/jquery-ui-1.9.2.custom.min.js"></script>
         <link rel='stylesheet' type='text/css' href='fullcalendar/fullcalendar.css' />
         <script type='text/javascript' src='fullcalendar/fullcalendar.js'></script>
-        <script type='text/javascript' src='main.js'></script>
+        <script type='text/javascript' src='js/main.js'></script>
     </head>
     <body>
         <div class="container_16 ui-corner-top shadow header sitetitle">

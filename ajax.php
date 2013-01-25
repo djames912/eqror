@@ -4,12 +4,12 @@ $method = 'POST';
 $rosterdata = json_decode('[{
     "gname": "Jared", 
     "sname": "Meeker", 
-    "addr": "2816 Arapahoe Lane, Provo, UT 84604", 
-    "hphon": "801-224-5756", 
-    "mphon": "801-228-7912",
-    "wphon": "801-234-2609",
-    "hemail": "jared@meekers.org",
-    "wemail": "jared_meeker@morinda.com"
+    "addr": "Some Street, Some City, 76493", 
+    "hphon": "801-222-1111", 
+    "mphon": "801-333-4444",
+    "wphon": "801-444-5555",
+    "hemail": "jared@somedomain.com",
+    "wemail": "jared_meeker@something.org"
 }]') or die('cannot decode rosterdata');
 
 $events = json_decode('[{
