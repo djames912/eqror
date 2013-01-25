@@ -3,50 +3,17 @@
  */
 $(function() {
     // Prep tab data to be jQueryUI-ized
-    $( ".tabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
-    $( ".tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
-              
-    // Set active tab to tab #4
-    var tabs = $( ".tabs" ).tabs();
-    $(".tabs").tabs({
-        active: 3
-    });
-    
-    // Generate fullCalendar object inside #tcal
-    $('#tcal').fullCalendar({
-        // options
-        header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'month,agendaWeek,agendaDay'
-        },
-        selectable: true,
-        selectHelper: true,
-        select: function(start, end, allDay) {
-            var title = prompt('Event Title:');
-            if (title) {
-                $('#tcal').fullCalendar('renderEvent',
-                {
-                    title: title,
-                    start: start,
-                    end: end,
-                    allDay: allDay
-                },
-                true // make the event "stick"
-                );
+    $( ".tabs" ).tabs({
+        activate: function( event, ui ) {
+            var tabname = ui.newTab[0].id;
+            if (tabname == "calendar") {
+                renderCal();
+            } else if (tabname == "roster") {
+                renderRoster();
             }
-            $('#tcal').fullCalendar('unselect');
-        },
-        editable: true,
-        defaultView: 'month'
-    });
-    $(".tabs").tabs({
-        active: 0
-    });
-    
-    // Fetch roster and events via AJAX
-    loadroster();
-    loadevents();
+        }
+    }).addClass( "ui-tabs-vertical ui-helper-clearfix" );
+    $( ".tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
 });
 
 
@@ -72,6 +39,7 @@ function submitAJAX(func,jsondata,callback) {
 
 // Takes JSON roster data and populates roster
 function buildroster(jsondata) {
+    $('#rfamily_container').empty();
     $.each(jsondata, function() {
         var fam = document.createElement("div")
         $(fam).addClass("container_16 rfamily");  
@@ -85,12 +53,50 @@ function buildroster(jsondata) {
     });
 }
 
-// Takes JSON event data and populates calendar
-function refreshevents(jsondata) {
-//    $('#tcal').fullCalendar({
-//        events: jsondata    
-//    });
-    //$('#tcal').fullCalendar( 'rerenderEvents' );
+// 
+function renderCal() {
+    // Generate fullCalendar object inside #tcal
+    $('#tcal').empty();
+    $('#tcal').fullCalendar({
+        // options
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay'
+        },
+        selectable: true,
+        selectHelper: true,
+        select: function(start, end, allDay) {
+            var title = prompt('Event Title:');
+            if (title) {
+                $('#tcal').fullCalendar('renderEvent',
+                {
+                    title: title,
+                    start: start,
+                    end: end,
+                    allDay: allDay
+                },
+                true // make the event "stick"
+                );
+            }
+            $('#tcal').fullCalendar('unselect');
+        },
+        editable: true,
+        defaultView: 'month',
+        eventSources: [{
+            url: 'ajax.php',
+            type: 'POST',
+            data: {
+                func: 'getevents',
+                args: ''
+            },
+            error: function() {
+                alert('there was an error while fetching events!');
+            },
+            color: 'green',   // a non-ajax option
+            textColor: 'white' // a non-ajax option
+        }]
+    });
 }
 
 // Takes JSON announcement data and populates announcements
@@ -109,7 +115,8 @@ function editannounement() {
 }
 
 // Initiates AJAX call to get roster data, uses buildroster() as callback
-function loadroster() {
+function renderRoster() {
+   
     submitAJAX("getroster",null,buildroster);
 }
 

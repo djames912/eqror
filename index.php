@@ -10,7 +10,7 @@
         <script src="js/jquery/js/jquery-1.8.3.js"></script>
         <script src="js/jquery/js/jquery-ui-1.9.2.custom.min.js"></script>
         <link rel='stylesheet' type='text/css' href='js/fullcalendar/fullcalendar.css' />
-        <script type='text/javascript' src='js/fullcalendar/fullcalendar.js'></script>
+        <script type='text/javascript' src='js/fullcalendar/fullcalendar.min.js'></script>
         <script type='text/javascript' src='js/main.js'></script>
     </head>
     <body>
@@ -20,10 +20,10 @@
         </div>
         <div class="container_16 tabs shadow">
             <ul>
-                <li><a href="#thome">Home</a></li>
-                <li><a href="#troster">Roster</a></li>
-                <li><a href="#t3">Something</a></li>
-                <li><a href="#tcal">Calendar</a></li>
+                <li id="home"><a href="#thome">Home</a></li>
+                <li id="roster"><a href="#troster">Roster</a></li>
+                <li id="something"><a href="#t3">Something</a></li>
+                <li id="calendar"><a href="#tcal">Calendar</a></li>
             </ul>
             <div id="thome" class="container_16">
                 <h2>Announcements</h2>

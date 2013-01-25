@@ -3,7 +3,7 @@
 /*
  * A list of allowed calls
  */
-$functions = Array('getroster','getevents');
+$functions = Array('getroster', 'getevents');
 
 /*
  * We only allow this method
@@ -23,14 +23,21 @@ $rosterdata = json_decode('[{
     "hemail": "jared@somedomain.com",
     "wemail": "jared_meeker@something.org"
 }]') or die('cannot decode rosterdata');
-$events = json_decode('[{
+$events = json_decode('[
+    {
     "title": "All Day Event",
     "start": "1359035746"
-}]') or die('cannot decode events');
+    },
+    {
+    "title": "All Day Event2",
+    "start": "1358949346"
+    }
+]') or die('cannot decode events');
 
 /*
  * Generic error generator
  */
+
 function genErr($msg) {
     $error = Array();
     $error['status'] = 'failed';
@@ -53,7 +60,7 @@ extract($_POST, EXTR_PREFIX_ALL, 'REQ_');
 /*
  * Die if the function isn't specified or isn't one of our accepted ones
  */
-if (!isset($REQ__func) || !in_array($REQ__func,$functions)) {
+if (!isset($REQ__func) || !in_array($REQ__func, $functions)) {
     die(genErr("Unknown request type."));
 }
 
