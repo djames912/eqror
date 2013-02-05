@@ -38,7 +38,7 @@ function addPosition($position)
     $r_val['ERR'] = "Database connection problem encountered.";
   else
   {
-    $dbQuery - "SELECT * FROM positions WHERE assignment='$position';";
+    $dbQuery = "SELECT * FROM positions WHERE assignment='$position';";
     $result = mysql_query($dbQuery);
     $rows = mysql_num_rows($result);
     if(!$rows)
