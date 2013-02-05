@@ -116,7 +116,6 @@ function editannounement() {
 
 // Initiates AJAX call to get roster data, uses buildroster() as callback
 function renderRoster() {
-   
     submitAJAX("getroster",null,buildroster);
 }
 
@@ -133,4 +132,16 @@ function updateroster() {
 // Submits login authentication request
 function login() {
     
+}
+
+// Submits a new position
+function addPosition() {
+    var newposition = $("#position").val();
+    var params = {"position": newposition};
+    submitAJAX("newpos",params,showPosResult);
+}
+
+function showPosResult(jsonres) {
+    var stringres = JSON.stringify(jsonres);
+    $("#posresult").text(stringres);
 }

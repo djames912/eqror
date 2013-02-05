@@ -2,7 +2,7 @@
 /* Require the connectdb.php file since it contains the necessary information to
  * make a connection to the database.
  */
-require_once "connectdb.php";
+require_once "connectDB.php";
 
 /* This is a generic function that pulls the entire contents of a table.  It accepts
  * as an argument the name of the table and returns and associative array of the

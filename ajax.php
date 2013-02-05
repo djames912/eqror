@@ -1,9 +1,11 @@
 <?php
 
+require_once 'functions.php';
+
 /*
  * A list of allowed calls
  */
-$functions = Array('getroster', 'getevents');
+$functions = Array('getroster', 'getevents', 'newpos');
 
 /*
  * We only allow this method
@@ -37,7 +39,6 @@ $events = json_decode('[
 /*
  * Generic error generator
  */
-
 function genErr($msg) {
     $error = Array();
     $error['status'] = 'failed';
@@ -86,6 +87,12 @@ function getroster($args = null) {
 function getevents($args = null) {
     global $events;
     return json_encode($events);
+}
+
+// Returns result as JSON
+//    TODO: send only if authenticated
+function newpos($args = null) {
+    return json_encode(addPosition($args["position"]));
 }
 
 /*
