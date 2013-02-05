@@ -34,5 +34,26 @@ function getTableContents($tableName)
 function addPosition($position)
 {
   $dbLink = dbconnect();
+  if(!$dbLink)
+    $r_val['ERR'] = "Database connection problem encountered.";
+  else
+  {
+    $dbQuery - "SELECT * FROM positions WHERE assignment='$position';";
+    $result = mysql_query($dbQuery);
+    $rows = mysql_num_rows($result);
+    if(!$rows)
+    {
+      $dbQuery = "INSERT INTO positions(assignment) VALUES('$position');";
+    if(!mysql_query($dbQuery))
+      $r_val['ERR'] = "INSERT failed: $dbQuery" . mysql_error();
+    else
+      $r_val['GOOD'] = "Inserted assigment $position into the database.";
+    }
+    else      
+    {
+      $r_val['NONE'] = "Record already exists for assignment: $position.";
+    }
+  }
+  return $r_val;
 }
 ?>
