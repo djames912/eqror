@@ -139,6 +139,7 @@ function addPosition() {
     var newposition = $("#position").val();
     var params = {"position": newposition};
     submitAJAX("newpos",params,showPosResult);
+    $("#position").val("");
 }
 
 function showPosResult(jsonres) {
