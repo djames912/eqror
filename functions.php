@@ -5,14 +5,14 @@
 require_once "connectDB.php";
 
 /* This is a generic function that pulls the entire contents of a table.  It accepts
- * as an argument the name of the table and returns and associative array of the
+ * as an argument the name of the table and returns an associative array of the
  * contents of the table.  It's meant to be used as a testing/debugging tool.
  */
 function getTableContents($tableName)
 {
   $dbLink = dbconnect();
   if(!$dbLink)
-    $r_val['ERR'] = "Database connection problem encountered.";
+    $r_val['RSLT'] = "Database connection problem encountered.";
   else
   {
     $dbQuery = "SELECT * from $tableName;";
@@ -35,7 +35,7 @@ function addPosition($position)
 {
   $dbLink = dbconnect();
   if(!$dbLink)
-    $r_val['ERR'] = "Database connection problem encountered.";
+    $r_val['RSLT'] = "Database connection problem encountered.";
   else
   {
     $dbQuery = "SELECT * FROM positions WHERE assignment='$position';";
@@ -45,13 +45,13 @@ function addPosition($position)
     {
       $dbQuery = "INSERT INTO positions(assignment) VALUES('$position');";
       if(!mysql_query($dbQuery))
-        $r_val['ERR'] = "INSERT failed: $dbQuery" . mysql_error();
+        $r_val['RSLT'] = "INSERT failed: $dbQuery" . mysql_error();
       else
-        $r_val['GOOD'] = "Inserted assigment $position into the database.";
+        $r_val['RSLT'] = "Inserted assigment $position into the database.";
     }
     else      
     {
-      $r_val['NONE'] = "Record already exists for assignment: $position.";
+      $r_val['RSLT'] = "Record already exists for assignment: $position.";
     }
   }
   return $r_val;
