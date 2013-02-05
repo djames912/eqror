@@ -44,10 +44,10 @@ function addPosition($position)
     if(!$rows)
     {
       $dbQuery = "INSERT INTO positions(assignment) VALUES('$position');";
-    if(!mysql_query($dbQuery))
-      $r_val['ERR'] = "INSERT failed: $dbQuery" . mysql_error();
-    else
-      $r_val['GOOD'] = "Inserted assigment $position into the database.";
+      if(!mysql_query($dbQuery))
+        $r_val['ERR'] = "INSERT failed: $dbQuery" . mysql_error();
+      else
+        $r_val['GOOD'] = "Inserted assigment $position into the database.";
     }
     else      
     {
