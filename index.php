@@ -22,36 +22,19 @@
             <ul>
                 <li id="home"><a href="#thome">Home</a></li>
                 <li id="roster"><a href="#troster">Roster</a></li>
-                <li id="something"><a href="#t3">Something</a></li>
                 <li id="calendar"><a href="#tcal">Calendar</a></li>
+                <li id="admin"><a href="#tadmin">Admin</a></li>
             </ul>
             <div id="thome" class="container_16">
-                <h2>Announcements</h2>
-                <h5>12.05.2013</h5>
-                <p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. </p>
-
-                <h5>2 Dec 2012</h5>
-                <p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. </p>
+                <?php include 'pages/announcements.php'; ?>
             </div>
             <div id="troster" class="container_16">
-                <h2>Roster</h2>
-                <div class="container_16 rfamily_header">
-                    <div class="grid_2 gname">First</div>
-                    <div class="grid_2 sname">Last</div>
-                    <div class="grid_2 addr">Address</div>
-                    <div class="grid_2 hphon">Home Phone</div>
-                    <div class="grid_2 mphon">Mobile Phone</div>
-                    <div class="grid_2 wphon">Work Phone</div>
-                    <div class="grid_2 hemail">Email (home)</div>
-                    <div class="grid_2 wemail">Email (work)</div>
-                </div>
-                <div class="container_16" id="rfamily_container"></div>
-            </div>
-            <div id="t3" class="container_16">
-                <h2>Something</h2>
-                <p></p>
+                <?php include 'pages/roster.php'; ?>
             </div>
             <div id="tcal" class="container_16"></div>
+            <div id="tadmin" class="container_16">
+                <?php include 'pages/admin.php'; ?>
+            </div>
         </div>
     </body>
 </html>
