@@ -14,6 +14,9 @@ $(function() {
         }
     }).addClass( "ui-tabs-vertical ui-helper-clearfix" );
     $( ".tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+    
+    $(".error").hide();
+    $(".message").hide();
 });
 
 
@@ -29,12 +32,49 @@ function submitAJAX(func,jsondata,callback) {
             args: jsondata
         }
     }).done(function(msg) {
-        if (callback != null) {
-            callback(jQuery.parseJSON(msg));
+        if (isJSON(msg)) {
+            if (callback != null) {
+                callback(jQuery.parseJSON(msg));
+            } else {
+                return msg;
+            }
         } else {
-            return msg;
-        }
+            showMsg("Unable to understand server reply.", true);
+            return;
+        }        
     });
+}
+
+// Test AJAX result for valid JSON
+function isJSON(jsonString) {
+    try {
+        var a = JSON.parse(jsonString);
+        return true;
+    } catch(e) {
+        return false;
+    }
+}
+
+// Show error
+function showMsg(message,error) {
+    if (typeof error == "undefined") error = false;
+    
+    if (error == true) newclass = "error";
+    else newclass = "message";
+    
+    console.log(newclass + ": " + message);
+    $("#msg").text(message).addClass(newclass).fadeIn("slow", function() {
+        
+        // Flash once then stay visible for 5 seconds
+        $(this).fadeOut("slow", function() {
+            $(this).fadeIn("slow", function() {
+                $(this).delay(5000).fadeOut("slow", function() {
+                    $(this).removeClass(newclass).text("");
+                });
+            });
+        })
+     
+    })
 }
 
 // Takes JSON roster data and populates roster
@@ -53,9 +93,8 @@ function buildroster(jsondata) {
     });
 }
 
-// 
+// Generate fullCalendar object inside #tcal
 function renderCal() {
-    // Generate fullCalendar object inside #tcal
     $('#tcal').empty();
     $('#tcal').fullCalendar({
         // options
@@ -91,7 +130,7 @@ function renderCal() {
                 args: ''
             },
             error: function() {
-                alert('there was an error while fetching events!');
+                showMsg("There was an error while fetching events!", true);
             },
             color: 'green',   // a non-ajax option
             textColor: 'white' // a non-ajax option
@@ -137,12 +176,16 @@ function login() {
 // Submits a new position
 function addPosition() {
     var newposition = $("#position").val();
-    var params = {"position": newposition};
+    var params = {
+        "position": newposition
+    };
     submitAJAX("newpos",params,showPosResult);
     $("#position").val("");
 }
 
+// Render result of addPosition()
 function showPosResult(jsonres) {
     var stringres = JSON.stringify(jsonres);
-    $("#posresult").text(stringres);
+    showMsg(stringres,false);   
+    //$("#posresult").text(stringres);
 }

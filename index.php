@@ -14,6 +14,7 @@
         <script type='text/javascript' src='js/main.js'></script>
     </head>
     <body>
+        <div class="container_16 msg_cont"><div id="msg" class="container_16 ui-corner-all"></div></div>
         <div class="container_16 ui-corner-top shadow header sitetitle">
             <div class="grid_16 user">user (logout)</div>
             EQ RoR

@@ -70,3 +70,21 @@ h5 {
     white-space: nowrap; 
     text-overflow: ellipsis; 
 }
+
+.msg_cont {
+    height: 20px;
+}
+
+.error {
+    background-color: rgba(255,0,0,0.75);
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.message {
+    background-color: rgba(0,0,255,0.75);
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
