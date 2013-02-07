@@ -56,4 +56,5 @@ function addPosition($position)
   }
   return $r_val;
 }
+
 ?>
