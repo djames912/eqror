@@ -21,7 +21,7 @@
 
 /*!40000 DROP DATABASE IF EXISTS `orgror`*/;
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `orgror` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `orgror` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `orgror`;
 
@@ -36,7 +36,7 @@ CREATE TABLE `positions` (
   `id` smallint(6) NOT NULL AUTO_INCREMENT,
   `assignment` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
