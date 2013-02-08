@@ -10,19 +10,18 @@ require_once "connectDB.php";
  */
 function getTableContents($tableName)
 {
-  $dbLink = dbconnect();
-  if(!$dbLink)
-    $r_val['RSLT'] = "Database connection problem encountered.";
-  else
+  try
   {
-    $dbQuery = "SELECT * from $tableName;";
-    $result = mysql_query($dbQuery);
-    $rows = mysql_num_rows($result);
-    for($loop = 0; $loop < $rows; ++$loop)
-    {
-      $row[$loop] = mysql_fetch_row($result, MYSQL_ASSOC);
-    }
-    $r_val = $row;
+    $dbLink = dbconnect();
+    $bldQuery = "SELECT * FROM $tableName";
+    $statement = $dbLink->prepare($bldQuery);
+    $statement->execute();
+    $r_val = $statement->fetchAll(PDO::FETCH_ASSOC);
+  }
+  catch(PDOException $exception)
+  {
+    echo "Oooops.  Unable to get your data.";
+    $r_val['RSLT'] = $exception->getMessage();
   }
   return $r_val;
 }
@@ -33,26 +32,17 @@ function getTableContents($tableName)
  */
 function addPosition($position)
 {
-  $dbLink = dbconnect();
-  if(!$dbLink)
-    $r_val['RSLT'] = "Database connection problem encountered.";
-  else
+  try
   {
-    $dbQuery = "SELECT * FROM positions WHERE assignment='$position';";
-    $result = mysql_query($dbQuery);
-    $rows = mysql_num_rows($result);
-    if(!$rows)
-    {
-      $dbQuery = "INSERT INTO positions(assignment) VALUES('$position');";
-      if(!mysql_query($dbQuery))
-        $r_val['RSLT'] = "INSERT failed: $dbQuery" . mysql_error();
-      else
-        $r_val['RSLT'] = "Inserted assigment $position into the database.";
-    }
-    else      
-    {
-      $r_val['RSLT'] = "Record already exists for assignment: $position.";
-    }
+    $dbLink = dbconnect();
+    $bldQuery = "INSERT INTO positions (assignment) VALUES ('$position');";
+    $statement = $dbLink->prepare($bldQuery);
+    $statement->execute();
+  }
+  catch(PDOException $exception)
+  {
+    echo "Unable to insert the new position.  Sorry.";
+    $r_val = $exception->getMessage();
   }
   return $r_val;
 }

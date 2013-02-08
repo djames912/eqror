@@ -6,13 +6,9 @@
  */
 function dbconnect()
 {
-  $db_host = "localhost";
-  $db_user = "roruser";
-  $db_pass = "ClEAnm3Up!";
-  $db_name = "orgror";
-  $link = mysql_connect("$db_host","$db_user","$db_pass") or die("Conection to database
-    failed: " . mysql_error());
-  mysql_select_db("$db_name") or die("Unable to select database: " . $db_name . mysql_error($link));
-  return $link;
+  $dbcon = new PDO('mysql:host=localhost; dbname=orgror; charset=utf8', 'roruser',
+      'ClEAnm3Up!', array(PDO::ATTR_EMULATE_PREPARES => false,
+          PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+  return $dbcon;
 }
 ?>
