@@ -32,7 +32,7 @@ function submitAJAX(func,jsondata,callback) {
             args: jsondata
         }
     }).done(function(msg) {
-        if (isJSON(msg)) {
+        if (isJSON(msg) && testResult(msg)) {
             if (callback != null) {
                 callback(jQuery.parseJSON(msg));
             } else {
@@ -47,12 +47,28 @@ function submitAJAX(func,jsondata,callback) {
 
 // Test AJAX result for valid JSON
 function isJSON(jsonString) {
+    // Do we even need this test?
+    if (jsonString === null) return false;
+    
     try {
         var a = JSON.parse(jsonString);
         return true;
     } catch(e) {
         return false;
     }
+}
+
+// Test an AJAX result for an error
+function testResult(jsObj) {
+    var result = false;
+    var obj = JSON.parse(jsObj);
+    
+    if (obj.RSLT == 0) result = true;
+    
+    if (result == false) {
+        showMsg("Server request failed: " + jsObj, true);
+    }
+    return result;
 }
 
 // Show error
@@ -186,6 +202,5 @@ function addPosition() {
 // Render result of addPosition()
 function showPosResult(jsonres) {
     var stringres = JSON.stringify(jsonres);
-    showMsg(stringres,false);   
-    //$("#posresult").text(stringres);
+    showMsg("Position successfully saved. (duplicate not detected)",false);   
 }
