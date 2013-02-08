@@ -20,8 +20,13 @@ and open the template in the editor.
     echo "<pre>";
     print_r($tstVar);
     echo "<br>";
-    $tstVar = getTableContents(positions);
+    //$tstVar = getTableContents(positions);
+    //print_r($tstVar);
+    $tstVar = checkExists(positions, assignment, President);
     print_r($tstVar);
+    $myValue = $tstVar['RSLT'];
+    echo "<br>";
+    echo "$myValue";
     ?>
   </body>
 </html>
