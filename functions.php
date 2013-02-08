@@ -13,7 +13,7 @@ function getTableContents($tableName)
   try
   {
     $dbLink = dbconnect();
-    $bldQuery = "SELECT * FROM $tableName";
+    $bldQuery = "SELECT * FROM $tableName;";
     $statement = $dbLink->prepare($bldQuery);
     $statement->execute();
     $r_val = $statement->fetchAll(PDO::FETCH_ASSOC);
