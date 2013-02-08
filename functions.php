@@ -39,6 +39,7 @@ function checkExists($tableName, $fieldName, $searchFor)
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed.";
+    echo "Internal function problem.";
   }
  else
   {
@@ -68,28 +69,36 @@ function addPosition($position)
 {
   $tmpVar = checkExists(positions, assignment, $position);
   $positionExists = $tmpVar['RSLT'];
-  if($positionExists)
+  if($tmpVar['MSSG'] == "Incomplete data set passed.")
   {
-    try
-    {
-      $dbLink = dbconnect();
-      $bldQuery = "INSERT INTO positions (assignment) VALUES ('$position');";
-      $statement = $dbLink->prepare($bldQuery);
-      $statement->execute();
-      $r_val['RSLT'] = "0";
-      $r_val['MSSG'] = "New position successfully inserted.";
-    }
-    catch(PDOException $exception)
-    {
-      echo "Unable to insert the new position.  Sorry.";
-      $r_val['RSLT'] = "1";
-      $r_val['MSSG'] = $exception->getMessage();
-    }
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Internal function error: " . $tmpVar['MSSG'];
   }
   else
   {
-    $r_val['RSLT'] = "1";
-    $r_val['MSSG'] = "Position already present in database.";
+    if($positionExists)
+    {
+      try
+      {
+        $dbLink = dbconnect();
+        $bldQuery = "INSERT INTO positions (assignment) VALUES ('$position');";
+        $statement = $dbLink->prepare($bldQuery);
+        $statement->execute();
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = "New position successfully inserted.";
+      }
+      catch(PDOException $exception)
+      {
+        echo "Unable to insert the new position.  Sorry.";
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = $exception->getMessage();
+      }
+    }
+    else
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Position already present in database.";
+    }
   }
   return $r_val;
 }
