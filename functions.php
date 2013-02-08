@@ -21,9 +21,20 @@ function getTableContents($tableName)
   catch(PDOException $exception)
   {
     echo "Oooops.  Unable to get your data.";
-    $r_val['RSLT'] = $exception->getMessage();
+    $r_val['RSLT'] =  "1"; 
+    $r_val['MSSG'] = $exception->getMessage();
   }
   return $r_val;
+}
+
+/* This function checks to see if a given value already exists in a given table
+ * It accepts three arguments: the table name, the colum name and the value being
+ * searched for.  This function may be expanded on and made to be more sophisticated
+ * in the future.
+ */
+function checkExists($tableName, $fieldName, $searchFor)
+{
+  
 }
 
 /* This function inserts records into the positions table.  It accepts as an
@@ -38,11 +49,14 @@ function addPosition($position)
     $bldQuery = "INSERT INTO positions (assignment) VALUES ('$position');";
     $statement = $dbLink->prepare($bldQuery);
     $statement->execute();
+    $r_val['RSLT'] = "0";
+    $r_val['MSSG'] = "Success.";
   }
   catch(PDOException $exception)
   {
     echo "Unable to insert the new position.  Sorry.";
-    $r_val = $exception->getMessage();
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = $exception->getMessage();
   }
   return $r_val;
 }
