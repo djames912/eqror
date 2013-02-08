@@ -32,11 +32,13 @@ function submitAJAX(func,jsondata,callback) {
             args: jsondata
         }
     }).done(function(msg) {
-        if (isJSON(msg) && testResult(msg)) {
-            if (callback != null) {
-                callback(jQuery.parseJSON(msg));
-            } else {
-                return msg;
+        if (isJSON(msg)) {
+            if (testResult(msg)) {
+                if (callback != null) {
+                    callback(jQuery.parseJSON(msg));
+                } else {
+                    return msg;
+                }
             }
         } else {
             showMsg("Unable to understand server reply.", true);
@@ -63,7 +65,7 @@ function testResult(jsObj) {
     var result = false;
     var obj = JSON.parse(jsObj);
     
-    if (obj.RSLT == 0) result = true;
+    if (parseInt(obj.RSLT) == 0) result = true;
     
     if (result == false) {
         showMsg("Server request failed: " + jsObj, true);
@@ -79,7 +81,7 @@ function showMsg(message,error) {
     else newclass = "message";
     
     console.log(newclass + ": " + message);
-    $("#msg").text(message).addClass(newclass).fadeIn("slow", function() {
+    $("#msg").stop(true,true).text(message).addClass(newclass).fadeIn("slow", function() {
         
         // Flash once then stay visible for 5 seconds
         $(this).fadeOut("slow", function() {
