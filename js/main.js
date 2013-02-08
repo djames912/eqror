@@ -32,7 +32,8 @@ function submitAJAX(func,jsondata,callback) {
             args: jsondata
         }
     }).done(function(msg) {
-        if (isJSON(msg)) {
+        if (isJSON(msg) && testResult(msg)) {
+            
             if (callback != null) {
                 callback(jQuery.parseJSON(msg));
             } else {
@@ -61,11 +62,12 @@ function isJSON(jsonString) {
 // Test an AJAX result for an error
 function testResult(jsObj) {
     var result = false;
+    var obj = JSON.parse(jsObj);
     
-    if (jsObj.RSLT == 0) result = true;
+    if (obj.RSLT == 0) result = true;
     
     if ($result == false) {
-        showMsg("Server request failed: " + JSON.stringify(jsObj), true);
+        showMsg("Server request failed: " + jsObj, true);
     }
     return result;
 }
