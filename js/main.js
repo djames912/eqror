@@ -47,12 +47,27 @@ function submitAJAX(func,jsondata,callback) {
 
 // Test AJAX result for valid JSON
 function isJSON(jsonString) {
+    // Do we even need this test?
+    if (jsonString === null) return false;
+    
     try {
         var a = JSON.parse(jsonString);
         return true;
     } catch(e) {
         return false;
     }
+}
+
+// Test an AJAX result for an error
+function testResult(jsObj) {
+    var result = false;
+    
+    if (jsObj.RSLT == 0) result = true;
+    
+    if ($result == false) {
+        showMsg("Server request failed: " + JSON.stringify(jsObj), true);
+    }
+    return result;
 }
 
 // Show error
