@@ -33,7 +33,6 @@ function submitAJAX(func,jsondata,callback) {
         }
     }).done(function(msg) {
         if (isJSON(msg) && testResult(msg)) {
-            
             if (callback != null) {
                 callback(jQuery.parseJSON(msg));
             } else {
@@ -66,7 +65,7 @@ function testResult(jsObj) {
     
     if (obj.RSLT == 0) result = true;
     
-    if ($result == false) {
+    if (result == false) {
         showMsg("Server request failed: " + jsObj, true);
     }
     return result;
@@ -203,6 +202,5 @@ function addPosition() {
 // Render result of addPosition()
 function showPosResult(jsonres) {
     var stringres = JSON.stringify(jsonres);
-    showMsg(stringres,false);   
-    //$("#posresult").text(stringres);
+    showMsg("Position successfully saved. (duplicate not detected)",false);   
 }
