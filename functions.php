@@ -61,13 +61,62 @@ function checkExists($tableName, $fieldName, $searchFor)
   return $r_val;
 }
 
+/* This function is specifically designed to check for duplicate entries in the
+ * members table.  It accepts a surname and a given name and, optionally, a middle
+ * name and/or suffix as arguments.  It returns whether or not the name is already
+ * in the database.
+ */
+function checkMemberExists($surName, $givenName, $middleName, $suffix)
+{
+  if(!$surName || !$givenName)
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+    echo "Internal function error.";
+  }
+  else
+  {
+    if($middleName)
+      $addMiddle = " AND middlename=?";
+    if($suffix)
+      $addSuffix = " AND suffix=?";
+    $dbLink = dbconnect();
+    $bldQuery = "SELECT * FROM members WHERE surname=? AND givenname=?";
+    if($addMiddle)
+      $bldQuery = $bldQuery . $addMiddle;
+    if($addSuffix)
+      $bldQuery = $bldQuery . $addSuffix;
+    $statement = $dbLink->prepare($bldQuery);
+    if($middleName && $suffix)
+      $statement->execute(array($surName, $givenName, $middleName, $suffix));
+    elseif($middleName && !$suffix)
+      $statement->execute(array($surName, $givenName, $middleName));
+    elseif(!$middleName && $suffix)
+      $statement->execute(array($surName, $givenName, $suffix));
+    else
+      $statement->execute(array($surName, $givenName));
+    $numRows = $statement->rowCount();
+    if(!$numRows)
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Member not found in database.";
+    }
+    else
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "$numRows members matching search found in database.";
+    }
+  }
+  return $r_val;
+}
+
 /* This function inserts records into the positions table.  It accepts as an
  * argument the name of the position that needs to be created.  It returns
  * whether or not the insert was successful.
  */
 function addPosition($position)
 {
-  $tmpVar = checkExists(positions, assignment, $position);
+  $tmpVar = checkExists("positions", "assignment", $position);
   $positionExists = $tmpVar['RSLT'];
   if($tmpVar['MSSG'] == "Incomplete data set passed.")
   {
@@ -81,7 +130,7 @@ function addPosition($position)
       try
       {
         $dbLink = dbconnect();
-        $bldQuery = "INSERT INTO positions (assignment) VALUES ('$position');";
+        $bldQuery = "INSERT INTO positions(assignment) VALUES('$position');";
         $statement = $dbLink->prepare($bldQuery);
         $statement->execute();
         $r_val['RSLT'] = "0";
@@ -103,4 +152,46 @@ function addPosition($position)
   return $r_val;
 }
 
+/* This function inserts records into the various types tables.  The types tables
+ * maintain the simple records of the various types of telephone numbers, email
+ * addresses.  It accepts two arguments, a table name and a label.  It returns 
+ * whether or not the insert of the new record was successful.
+ */
+function addType($tableName, $labelContent)
+{
+  $tmpVar = checkExists($tableName, "label", $labelContent);
+  $typeExists = $tmpVar['RSLT'];
+  if($tmpVar['MSSG'] == "Incomplete data set passed.")
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Internal function error: " . $tmpVar['MSSG'];
+  }
+  else
+  {
+    if($typeExists)
+    {
+      try
+      {
+        $dbLink = dbconnect();
+        $bldQuery = "INSERT INTO $tableName(label) VALUES('$labelContent');";
+        $statement = $dbLink->prepare($bldQuery);
+        $statement->execute();
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = "New record inserted into $tableName";
+      }
+      catch(PDOException $exception)
+      {
+        echo "Unable to insert new record into $tableName.  Sorry.";
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = $exception->getMessage();
+      }
+    }
+    else
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Position already present in database.";
+    }
+  }
+  return $r_val;
+}
 ?>
