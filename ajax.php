@@ -5,12 +5,20 @@ require_once 'functions.php';
 /*
  * A list of allowed calls
  */
-$functions = Array('getroster', 'getevents', 'newpos', 'getpositions');
+$functions = Array('getroster', 'getevents', 'newpos', 'getpositions', 'getmembers', 'getaddresstypes', 'getemailtypes', 'gettelecomtypes');
 
 /*
  * We only allow this method
  */
 $method = 'POST';
+
+
+/*
+ * Test request method
+ */
+if ($_SERVER['REQUEST_METHOD'] != $method) {
+    die(genErr("Cannot process request."));
+}
 
 /*
  * Sample data
@@ -44,13 +52,6 @@ function genErr($msg) {
     $error['status'] = 'failed';
     $error['msg'] = $msg;
     return json_encode($error);
-}
-
-/*
- * Test request method
- */
-if ($_SERVER['REQUEST_METHOD'] != $method) {
-    die(genErr("Cannot process request."));
 }
 
 /*
@@ -99,6 +100,31 @@ function newpos($args = null) {
 function getpositions($args = null) {
     $positionsdata = getTableContents("positions");
     return json_encode($positionsdata);
+}
+
+// Returns result as JSON
+//    TODO: send only if authenticated
+function getmembers($args = null) {
+    $memberdata = getTableContents("members");
+    return json_encode($memberdata);
+}
+
+// Returns result as JSON
+function getaddresstypes($args = null) {
+    $addresstypedata = getTableContents("addresstypes");
+    return json_encode($addresstypedata);
+}
+
+// Returns result as JSON
+function getemailtypes($args = null) {
+    $emailtypesdata = getTableContents("addresstypes");
+    return json_encode($emailtypesdata);
+}
+
+// Returns result as JSON
+function gettelecomtypes($args = null) {
+    $telecomtypesdata = getTableContents("addresstypes");
+    return json_encode($telecomtypesdata);
 }
 
 /*
