@@ -15,11 +15,16 @@ $(function() {
     }).addClass( "ui-tabs-vertical ui-helper-clearfix" );
     $( ".tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
     
-    $("#position").change(function() {
-        $("#submitpos").click();
+    // Listen for Enter key on position input
+    $("#position").keypress(function(event) {
+        if ( event.which == 13 ) {
+            event.preventDefault();
+            $("#submitpos").click();
+        }
     });
     
-    $(".error").hide();
+    // Hide message divs (we'll show them later)
+    //$(".error").hide();
     $(".message").hide();
     loadPositions();
 });
@@ -29,6 +34,7 @@ $(function() {
  * Functions
  */
 function submitAJAX(func,jsondata,callback) {
+    //consoleLog("raw json request data ("+func+"): "+JSON.stringify(jsondata));
     $.ajax({
         type: "POST",
         url: "ajax.php",
@@ -37,6 +43,7 @@ function submitAJAX(func,jsondata,callback) {
             args: jsondata
         }
     }).done(function(msg) {
+        //consoleLog("raw ajax reply: "+msg);
         if (isJSON(msg)) {
             if (testResult(msg)) {
                 if (callback != null) {
@@ -78,6 +85,13 @@ function testResult(jsObj) {
     return result;
 }
 
+// Log to console (wrapper)
+function consoleLog(msg) {
+    if (typeof console.log != "undefined") {
+        console.log(newclass + ": " + msg);
+    }
+}
+
 // Show error
 function showMsg(message,error) {
     if (typeof error == "undefined") error = false;
@@ -85,18 +99,13 @@ function showMsg(message,error) {
     if (error == true) newclass = "error";
     else newclass = "message";
     
-    console.log(newclass + ": " + message);
-    $("#msg").stop(true,true).text(message).addClass(newclass).fadeIn("slow", function() {
-        
+    consoleLog(newclass + ": " + message);
+    
+    $("#msg").stop(true,true).text(message).addClass(newclass).fadeIn("fast", function() {
         // Flash once then stay visible for 5 seconds
-        $(this).fadeOut("slow", function() {
-            $(this).fadeIn("slow", function() {
-                $(this).delay(5000).fadeOut("slow", function() {
-                    $(this).removeClass(newclass).text("");
-                });
-            });
-        })
-     
+        $(this).fadeOut("slow").fadeIn("slow").delay(5000).fadeOut("fast", function() {
+            $(this).text("").removeClass(newclass);
+        });     
     })
 }
 
@@ -203,26 +212,25 @@ function addPosition() {
         "position": newposition
     };
     submitAJAX("newpos",params,showPosResult);
-    $("#position").val("");
 }
 
 // Render result of addPosition()
 function showPosResult(jsonres) {
     var stringres = JSON.stringify(jsonres);
-    showMsg("Position successfully saved.",false); 
+    showMsg("Position successfully saved.",false);
+    $("#position").val("");
     loadPositions();
 }
 
 // Get all positions
 function loadPositions() {
-    console.log("loadpositions: loading positions");
-    var params = null;
-    submitAJAX("getpositions",params,showPositions);
+    //    consoleLog("loadpositions: loading positions");
+    submitAJAX("getpositions",null,showPositions);
 }
 
 // Render positions
 function showPositions(jsonres) {
-    console.log("showpositions: " + JSON.stringify(jsonres));
+    //    consoleLog("showpositions: " + JSON.stringify(jsonres));
     var positionsdata = jsonres.MSSG;
     
     var $positionsDiv = $("#positions");

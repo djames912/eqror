@@ -32,7 +32,7 @@ $rosterdata = json_decode('[{
     "wphon": "801-444-5555",
     "hemail": "jared@somedomain.com",
     "wemail": "jared_meeker@something.org"
-}]') or die('cannot decode rosterdata');
+}]');
 $events = json_decode('[
     {
     "title": "All Day Event",
@@ -42,7 +42,7 @@ $events = json_decode('[
     "title": "All Day Event2",
     "start": "1358949346"
     }
-]') or die('cannot decode events');
+]');
 
 /*
  * Generic error generator
