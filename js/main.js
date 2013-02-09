@@ -15,8 +15,13 @@ $(function() {
     }).addClass( "ui-tabs-vertical ui-helper-clearfix" );
     $( ".tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
     
+    $("#position").change(function() {
+        $("#submitpos").click();
+    });
+    
     $(".error").hide();
     $(".message").hide();
+    loadPositions();
 });
 
 
@@ -68,7 +73,7 @@ function testResult(jsObj) {
     if (parseInt(obj.RSLT) == 0) result = true;
     
     if (result == false) {
-        showMsg("Server request failed: " + jsObj, true);
+        showMsg(obj.MSSG, true);
     }
     return result;
 }
@@ -204,5 +209,25 @@ function addPosition() {
 // Render result of addPosition()
 function showPosResult(jsonres) {
     var stringres = JSON.stringify(jsonres);
-    showMsg("Position successfully saved. (duplicate not detected)",false);   
+    showMsg("Position successfully saved.",false); 
+    loadPositions();
+}
+
+// Get all positions
+function loadPositions() {
+    console.log("loadpositions: loading positions");
+    var params = null;
+    submitAJAX("getpositions",params,showPositions);
+}
+
+// Render positions
+function showPositions(jsonres) {
+    console.log("showpositions: " + JSON.stringify(jsonres));
+    var positionsdata = jsonres.MSSG;
+    
+    var $positionsDiv = $("#positions");
+    $positionsDiv.empty();
+    for (var i=0; i < positionsdata.length; i++) {
+        $positionsDiv.append(positionsdata[i].assignment).append("<br>");
+    }
 }

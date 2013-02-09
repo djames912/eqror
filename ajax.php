@@ -5,7 +5,7 @@ require_once 'functions.php';
 /*
  * A list of allowed calls
  */
-$functions = Array('getroster', 'getevents', 'newpos');
+$functions = Array('getroster', 'getevents', 'newpos', 'getpositions');
 
 /*
  * We only allow this method
@@ -93,6 +93,12 @@ function getevents($args = null) {
 //    TODO: send only if authenticated
 function newpos($args = null) {
     return json_encode(addPosition($args["position"]));
+}
+
+// Returns result as JSON
+function getpositions($args = null) {
+    $positionsdata = getTableContents("positions");
+    return json_encode($positionsdata);
 }
 
 /*

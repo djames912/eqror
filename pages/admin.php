@@ -5,4 +5,5 @@
 ?>
 <input type="text" id="position" name="position"> <button id="submitpos" onClick="addPosition(); ">Add Position</button>
 <br>
-<span id="posresult"></span>
+<h1>Positions in the database</h1>
+<span id="positions"></span>
