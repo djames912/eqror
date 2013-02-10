@@ -13,7 +13,15 @@ and open the template in the editor.
     require_once "functions.php";
     echo "Test Page";
     echo "<br>";
-    $newMember = checkMemberExists(James, Douglas);
+    $tmpVar = getMemberUID("James", "Douglas");
+    $memberUID = $tmpVar['MSSG'];
+    echo "UID: $memberUID";
+    //$newMember = addMember("James", "Douglas", "Walter");
+    //$memberUID = $newMember['MSSG'];
+    //echo "Member UID: $memberUID";
+    //echo "<pre>";
+    //print_r($newMember);
+    //$newMember = checkMemberExists(James, Douglas);
     //$newPos = "Other";
     //echo "Telephone Type: " . $newPos;
     //echo "<br>";

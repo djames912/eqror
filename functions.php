@@ -194,4 +194,111 @@ function addType($tableName, $labelContent)
   }
   return $r_val;
 }
+
+/* This function adds a new member.  It accepts four arguments: the surname,
+ * the given name, an opptional middle name (or initial) and an optional suffix.
+ * It returns whether or not the insert was successful or not.
+ */
+function addMember($surName, $givenName, $middleName, $suffix)
+{
+  if(!$surName || !$givenName)
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed: need both a surname and given name.";
+  }
+  else
+  {
+    $tmpVar = checkMemberExists($surName, $givenName, $middleName, $suffix);
+    $memberExists = $tmpVar['RSLT'];
+    if($tmpVar['MSSG'] == "Incomplete data set passed.")
+    {
+      $r_val['RSTL'] = "1";
+      $r_val['MSSG'] = "Internal function error: " . $tmpVar['MSSG'];
+    }
+    else
+    {
+      if($memberExists)
+      {
+        try
+        {
+          $dbLink = dbconnect();
+          $bldQuery = "INSERT INTO members(surname, givenname, middlename, suffix)
+            VALUES('$surName', '$givenName', '$middleName', '$suffix');";
+          $statement = $dbLink->prepare($bldQuery);
+          $statement->execute();
+          $r_val['RSLT'] = "0";
+          $r_val['MSSG'] = $dbLink->lastInsertId();
+        }
+        catch(PDOException $exception)
+        {
+          echo "Unable in insert new member.  Sorry.";
+          $r_val['RSLT'] = "1";
+          $r_val['MSSG'] = $exception->getMessage();
+        }
+      }
+      else
+      {
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "Member already exists in the database.";
+      }
+    }
+  }
+  return $r_val;
+}
+
+/* This function accepts up to four arguments, though only two are required and it
+ * returns the UID of the member being looked for as part of the 'MSSG' member of
+ * the array.
+ */
+function getMemberUID($surName, $givenName, $middleName, $suffix)
+{
+  if(!$surName || !$givenName)
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+    echo "Internal function error.";
+  }
+  else
+  {
+    if($middleName)
+      $addMiddle = " AND middlename=?";
+    if($suffix)
+      $addSuffix = " AND suffix=?";
+    $dbLink = dbconnect();
+    $bldQuery = "SELECT uid FROM members WHERE surname=? AND givenname=?";
+    if($addMiddle)
+      $bldQuery = $bldQuery . $addMiddle;
+    if($addSuffix)
+      $bldQuery = $bldQuery . $addSuffix;
+    $statement = $dbLink->prepare($bldQuery);
+    if($middleName && $suffix)
+      $statement->execute(array($surName, $givenName, $middleName, $suffix));
+    elseif($middleName && !$suffix)
+      $statement->execute(array($surName, $givenName, $middleName));
+    elseif(!$middleName && $suffix)
+      $statement->execute(array($surName, $givenName, $suffix));
+    else
+      $statement->execute(array($surName, $givenName));
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    if(!$result)
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Member not found in database.";
+    }
+    else
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = $result['0']['uid'];
+    }
+  }
+  return $r_val;
+}
+
+/* This function accepts two arguments: the table name and the label that is being
+ * searched for in the table.  It returns the type ID of the label.
+ */
+function getTypeID($tableName, $labelName)
+{
+  
+}
 ?>
