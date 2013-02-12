@@ -299,6 +299,79 @@ function getMemberUID($surName, $givenName, $middleName, $suffix)
  */
 function getTypeID($tableName, $labelName)
 {
-  
+  if(! $tableName || !$labelName)
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  else
+  {
+    try
+    {
+      $dbLink = dbconnect();
+      $bldQuery = "SELECT typeid FROM $tableName WHERE label='$labelName'";
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $result = $statement->fetchObject();
+      if(!$result)
+      {
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "Label name not found in database.";
+      }
+      else
+      {
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = $result->typeid;
+      }
+    }
+    catch(PDOException $exception)
+    {
+      echo "Unable to retrieve requested data.  Sorry";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = $exception->getMessage();
+    }
+  }
+  return $r_val;
+}
+
+/* This function in ths inverse of getTypeID().  This function accepts two arguments
+ * a table name and and a label ID.  The function returns the name that matches the
+ * label ID number.
+ */
+function getTypeLabel($tableName, $labelID)
+{
+  if(! $tableName || !$labelID)
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  else
+  {
+    try
+    {
+      $dbLink = dbconnect();
+      $bldQuery = "SELECT label FROM $tableName WHERE typeid='$labelID'";
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $result = $statement->fetchObject();
+      if(!$result)
+      {
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "Lable ID not found in database.";
+      }
+      else
+      {
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = $result->label;
+      }
+    }
+    catch(PDOException $exception)
+    {
+      echo "Unable to retrieve requested data.  Sorry";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = $exception->getMessage();
+    }
+  }
+  return $r_val;
 }
 ?>
