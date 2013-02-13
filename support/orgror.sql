@@ -92,6 +92,20 @@ CREATE TABLE `emailtypes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `events`
+--
+
+DROP TABLE IF EXISTS `events`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `events` (
+  `eid` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `label` varchar(32) NOT NULL,
+  PRIMARY KEY (`eid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `members`
 --
 
@@ -104,23 +118,23 @@ CREATE TABLE `members` (
   `givenname` varchar(32) NOT NULL,
   `middlename` varchar(32) NOT NULL,
   `suffix` varchar(8) NOT NULL,
-  `PosID` tinyint(4) NOT NULL,
   `password` varchar(64) NOT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `notifygroups`
+-- Table structure for table `posholders`
 --
 
-DROP TABLE IF EXISTS `notifygroups`;
+DROP TABLE IF EXISTS `posholders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `notifygroups` (
-  `gid` tinyint(4) NOT NULL AUTO_INCREMENT,
-  `label` varchar(32) NOT NULL,
-  PRIMARY KEY (`gid`)
+CREATE TABLE `posholders` (
+  `rn` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `pid` tinyint(4) NOT NULL,
+  PRIMARY KEY (`rn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -134,9 +148,23 @@ DROP TABLE IF EXISTS `positions`;
 CREATE TABLE `positions` (
   `id` tinyint(4) NOT NULL AUTO_INCREMENT,
   `assignment` varchar(32) NOT NULL,
-  `gid` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `subscribers`
+--
+
+DROP TABLE IF EXISTS `subscribers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subscribers` (
+  `rn` int(11) NOT NULL AUTO_INCREMENT,
+  `eid` tinyint(4) NOT NULL,
+  `uid` int(11) NOT NULL,
+  PRIMARY KEY (`rn`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,4 +207,4 @@ CREATE TABLE `telecomtypes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-02-09 17:28:48
+-- Dump completed on 2013-02-13  9:12:28
