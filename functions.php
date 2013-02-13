@@ -374,4 +374,110 @@ function getTypeLabel($tableName, $labelID)
   }
   return $r_val;
 }
+
+/* This function adds an email address to the email address table.  It accepts four
+ * arguments, three of which are required: a UID, an email address and a type ID.
+ * It accepts an optional argument for whether or not the address is the preferred
+ * email address.  An email address marked preferred is the one that the event
+ * reminder scheduler will select by default.  The function returns whether or not
+ * the insert was successful.
+ */
+function addEmail($UID, $emailAddress, $typeID, $preferred)
+{
+  if(!$UID || !$emailAddress || !$typeID)
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  else
+  {
+    $tmpVar = checkExists("email", "emailaddr", $emailAddress);
+    $checkVar = $tmpVar['RSLT'];
+    if($tmpVar['MSSG'] == "Incomplete data set passed.")
+    {
+      echo "Internal function error.";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Internal function error: " . $tmpVar['MSSG'];
+    }
+    else
+    {
+      if($checkVar)
+      {
+        if(!$preferred)
+          $preferred = "0";
+        else
+          $preferred = "1";
+        try
+        {
+          $bldQuery = "INSERT INTO email(uid, emailaddr, typeid, preferred) VALUES
+            ('$UID', '$emailAddress', '$typeID', '$preferred');";
+          $dbLink = dbconnect();
+          $statement = $dbLink->prepare($bldQuery);
+          $statement->execute();
+          $r_val['RSLT'] = "0";
+          $r_val['MSSG'] = "Email address successfully added.";
+        }
+        catch(PDOException $exception)
+        {
+          echo "Unable to insert record into database.";
+          $r_val['RSLT'] = "1";
+          $r_val['MSSG'] = "Record insert failed: " . $exception->getMessage();
+        }
+      }
+      else
+      {
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "Email address already exists in database.";
+      }
+    }
+  }
+  return $r_val;
+}
+
+/* This function assigns positions to members.  It accepts a user ID and a position
+ * ID as arguments.  It returns whether or not the entry was successfully made in
+ * the database.
+ */
+function assignPosition($UID, $PID)
+{
+  if(!$UID || !$PID)
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  else
+  {
+    $checkUID = checkExists("members", "uid", $UID);
+    $checkPID = checkExists("positions", "id", $PID);
+    if($checkUID['RSLT'] == "0" && $checkPID['RSLT'] == "0")
+    {
+      try
+      {
+        $bldQuery = "INSERT INTO posholders(uid, pid) VALUES('$UID', '$PID');";
+        $dbLink = dbconnect();
+        $statement = $dbLink->prepare($bldQuery);
+        $statement->execute();
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = "Insert into database successful.";
+      }
+      catch(PDOException $exception)
+      {
+        echo "Unable to insert record into database.";
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "Record insert failed: " . $exception->getMessage();
+      }
+    }
+    else
+    {
+      $r_val['RSLT'] = "1";
+      if($checkUID['RSLT'] == "1" && $checkPID['RSLT'] == "1")
+        $r_val['MSSG'] = "Neither UID nor PID found in database.";
+      elseif($checkPID['RSLT'] == "1")
+        $r_val['MSSG'] = "PID not found in database.";
+      else
+        $r_val['MSSG'] = "UID not found in database.";
+    }
+  }
+  return $r_val;
+}
 ?>
