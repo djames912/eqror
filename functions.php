@@ -17,7 +17,8 @@ function getTableContents($tableName)
     $statement = $dbLink->prepare($bldQuery);
     $statement->execute();
     $r_val['RSLT'] = "0";
-    $r_val['MSSG'] = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $r_val['MSSG'] = "Data located in $tableName";
+    $r_val['DATA'] = $statement->fetchAll(PDO::FETCH_ASSOC);
   }
   catch(PDOException $exception)
   {
@@ -227,7 +228,8 @@ function addMember($surName, $givenName, $middleName, $suffix)
           $statement = $dbLink->prepare($bldQuery);
           $statement->execute();
           $r_val['RSLT'] = "0";
-          $r_val['MSSG'] = $dbLink->lastInsertId();
+          $r_val['MSSG'] = "Member successfully inserted into database.";
+          $r_val['DATA'] = $dbLink->lastInsertId();
         }
         catch(PDOException $exception)
         {
@@ -288,7 +290,8 @@ function getMemberUID($surName, $givenName, $middleName, $suffix)
     else
     {
       $r_val['RSLT'] = "0";
-      $r_val['MSSG'] = $result['0']['uid'];
+      $r_val['MSSG'] = "Member found in database.";
+      $r_val['DATA'] = $result['0']['uid'];
     }
   }
   return $r_val;
@@ -321,7 +324,8 @@ function getTypeID($tableName, $labelName)
       else
       {
         $r_val['RSLT'] = "0";
-        $r_val['MSSG'] = $result->typeid;
+        $r_val['MSSG'] = "Label name found in database.";
+        $r_val['DATA'] = $result->typeid;
       }
     }
     catch(PDOException $exception)
@@ -362,7 +366,8 @@ function getTypeLabel($tableName, $labelID)
       else
       {
         $r_val['RSLT'] = "0";
-        $r_val['MSSG'] = $result->label;
+        $r_val['RSLT'] = "Lable ID found in database.";
+        $r_val['DATA'] = $result->label;
       }
     }
     catch(PDOException $exception)
