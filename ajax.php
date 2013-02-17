@@ -104,6 +104,12 @@ function getpositions($args = null) {
 
 // Returns result as JSON
 //    TODO: send only if authenticated
+function newmem($args = null) {
+    return json_encode(addMember($args["surn"], $args["givn"], $args["midl"], $args["sfx"]));
+}
+
+// Returns result as JSON
+//    TODO: send only if authenticated
 function getmembers($args = null) {
     $memberdata = getTableContents("members");
     return json_encode($memberdata);

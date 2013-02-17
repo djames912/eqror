@@ -231,11 +231,46 @@ function loadPositions() {
 // Render positions
 function showPositions(jsonres) {
     //    consoleLog("showpositions: " + JSON.stringify(jsonres));
-    var positionsdata = jsonres.MSSG;
+    var positionsdata = jsonres.DATA;
     
     var $positionsDiv = $("#positions");
     $positionsDiv.empty();
     for (var i=0; i < positionsdata.length; i++) {
         $positionsDiv.append(positionsdata[i].assignment).append("<br>");
+    }
+}
+
+// Submits a new member
+function addMember() {
+    var newposition = $("#member").val();
+    var params = {
+        "member": newposition
+    };
+    submitAJAX("newmem",params,showMemresult);
+}
+
+// Render result of addPosition()
+function showMemResult(jsonres) {
+    var stringres = JSON.stringify(jsonres);
+    showMsg("Member successfully saved.",false);
+    $("#member").val("");
+    loadMembers();
+}
+
+// Get all members
+function loadMembers() {
+    //    consoleLog("loadpositions: loading positions");
+    submitAJAX("getmembers",null,showMembers);
+}
+
+// Render positions
+function showMembers(jsonres) {
+    //    consoleLog("showpositions: " + JSON.stringify(jsonres));
+    var membersdata = jsonres.DATA;
+    
+    var $membersDiv = $("#members");
+    $membersDiv.empty();
+    for (var i=0; i < membersdata.length; i++) {
+        $membersDiv.append(membersdata[i].givenname).append("<br>");
     }
 }
