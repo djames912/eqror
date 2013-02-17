@@ -1,5 +1,7 @@
 /*
+ *
  * Executes after page load (jQuery)
+ * 
  */
 $(function() {
     // Prep tab data to be jQueryUI-ized
@@ -30,8 +32,13 @@ $(function() {
 });
 
 
+
+
+
 /*
+ *
  * Functions
+ * 
  */
 function submitAJAX(func,jsondata,callback) {
     //consoleLog("raw json request data ("+func+"): "+JSON.stringify(jsondata));
@@ -109,22 +116,15 @@ function showMsg(message,error) {
     })
 }
 
-// Takes JSON roster data and populates roster
-function buildroster(jsondata) {
-    $('#rfamily_container').empty();
-    $.each(jsondata, function() {
-        var fam = document.createElement("div")
-        $(fam).addClass("container_16 rfamily");  
-        $.each(this, function(field,value) {
-            var part = document.createElement("div");
-            $(part).addClass("grid_2 ellipse " + field);
-            $(part).html(value);
-            $(fam).append($(part).clone());
-        });
-        $('#rfamily_container').append($(fam).clone());
-    });
-}
 
+
+
+
+/*
+ *
+ * CALENDAR
+ * 
+ */
 // Generate fullCalendar object inside #tcal
 function renderCal() {
     $('#tcal').empty();
@@ -170,6 +170,20 @@ function renderCal() {
     });
 }
 
+// Submits login authentication request
+function login() {
+    
+}
+
+
+
+
+
+/*
+ *
+ * ANNOUNCEMENTS
+ * 
+ */
 // Takes JSON announcement data and populates announcements
 function loadannouncements() {
     
@@ -185,14 +199,34 @@ function editannounement() {
     
 }
 
+
+
+
+
+/*
+ *
+ * ROSTER
+ * 
+ */
+// Takes JSON roster data and populates roster
+function buildroster(jsondata) {
+    $('#rfamily_container').empty();
+    $.each(jsondata, function() {
+        var fam = document.createElement("div")
+        $(fam).addClass("container_16 rfamily");  
+        $.each(this, function(field,value) {
+            var part = document.createElement("div");
+            $(part).addClass("grid_2 ellipse " + field);
+            $(part).html(value);
+            $(fam).append($(part).clone());
+        });
+        $('#rfamily_container').append($(fam).clone());
+    });
+}
+
 // Initiates AJAX call to get roster data, uses buildroster() as callback
 function renderRoster() {
     submitAJAX("getroster",null,buildroster);
-}
-
-// Initiates AJAX call to get event data, uses refreshevents() as callback
-function loadevents() {
-    submitAJAX("getevents",null,refreshevents);
 }
 
 // Submits roster change(s) (then re-fetches roster)
@@ -200,11 +234,20 @@ function updateroster() {
     
 }
 
-// Submits login authentication request
-function login() {
-    
+// Initiates AJAX call to get event data, uses refreshevents() as callback
+function loadevents() {
+    submitAJAX("getevents",null,refreshevents);
 }
 
+
+
+
+
+/*
+ *
+ * POSITIONS
+ * 
+ */
 // Submits a new position
 function addPosition() {
     var newposition = $("#position").val();
@@ -240,6 +283,15 @@ function showPositions(jsonres) {
     }
 }
 
+
+
+
+
+/*
+ *
+ * MEMBERS
+ * 
+ */
 // Submits a new member
 function addMember() {
     var newposition = $("#member").val();
