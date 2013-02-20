@@ -103,8 +103,22 @@ CREATE TABLE `events` (
   `title` varchar(32) NOT NULL,
   `start` double NOT NULL,
   `end` double NOT NULL,
-  `category` varchar(32) NOT NULL,
+  `category` tinyint(4) NOT NULL,
   PRIMARY KEY (`eid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `eventtypes`
+--
+
+DROP TABLE IF EXISTS `eventtypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `eventtypes` (
+  `typeid` tinyint(4) NOT NULL AUTO_INCREMENT,
+  `label` varchar(32) NOT NULL,
+  PRIMARY KEY (`typeid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -210,4 +224,4 @@ CREATE TABLE `telecomtypes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-02-19 20:43:41
+-- Dump completed on 2013-02-19 20:59:02
