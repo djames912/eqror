@@ -99,8 +99,11 @@ DROP TABLE IF EXISTS `events`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `events` (
-  `eid` tinyint(4) NOT NULL AUTO_INCREMENT,
-  `label` varchar(32) NOT NULL,
+  `eid` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(32) NOT NULL,
+  `start` double NOT NULL,
+  `end` double NOT NULL,
+  `category` varchar(32) NOT NULL,
   PRIMARY KEY (`eid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -207,4 +210,4 @@ CREATE TABLE `telecomtypes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-02-13  9:12:28
+-- Dump completed on 2013-02-19 20:43:41
