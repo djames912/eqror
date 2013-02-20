@@ -485,4 +485,47 @@ function assignPosition($UID, $PID)
   }
   return $r_val;
 }
+
+/* This function accepts an object as its argument and returns whether or not the
+ * data was successfully entered into the database.
+ */
+function addEvent($newEvent)
+{
+  if(!is_object($newEvent))
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Object expected.  Something else was passed.";
+  }
+  else
+  {
+    if(!($newEvent->title && $newEvent->start && $newEvent->category))
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Incomplete data set passed.";
+    }
+    else
+    {
+      if(!$newEvent->end)
+        $newEvent->end = "NULL";
+      try
+      {
+        $bldQuery = "INSERT INTO events(title, start, end, category)
+          VALUES('$newEvent->title', '$newEvent->start', '$newEvent->end', 
+            '$newEvent->category');";
+        $dbLink = dbconnect();
+        $statement = $dbLink->prepare($bldQuery);
+        $statement->execute();
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = "Insert into database successful.";
+      }
+      catch(PDOException $exception)
+      {
+        echo "Unable to insert record into database.";
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "Record insert failed: " . $exception->getMessage();
+      }
+    }
+  }
+  return $r_val;
+}
 ?>
