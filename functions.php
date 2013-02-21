@@ -505,8 +505,13 @@ function addEvent($newEvent)
     }
     else
     {
+      $newEvent->start = convertToTimestamp($formattedDate);
+      
       if(!$newEvent->end)
         $newEvent->end = "NULL";
+      else
+        $newEvent->end = convertToTimestamp($formattedDate);
+      
       try
       {
         $bldQuery = "INSERT INTO events(title, start, end, category)
@@ -527,5 +532,55 @@ function addEvent($newEvent)
     }
   }
   return $r_val;
+}
+
+/* This function accepts an abbreviated month name (e.g. JAN, FEB) and converts it
+ * to a digit which it then returns.
+ */
+function monthToDigit($monthAbbrev)
+{
+  date_default_timezone_set('US/Mountain');
+  $monthDigit = 0;
+  $monthLower = strtolower($monthAbbrev);
+  $monthCorrected = ucfirst($monthLower);
+  for($monthNum = 1; $monthNum <= 12; $monthNum++)
+  {
+    if(date("M", mktime(0, 0, 0, $monthNum, 1, 0)) == $monthCorrected)
+    {
+      $monthDigit = $monthNum;
+    }
+  }
+  return $monthDigit;
+}
+
+/* This function accepts a string and a number of characters as arguments.  The
+ * function then truncates the string to match the number of characters that are
+ * provided.  The function returns the truncated string.
+ */
+function truncateString($textString, $numChars)
+{
+  if(strlen($textString) > $numChars)
+  {
+    $truncatedString = substr($textString, 0, $numChars);
+  }
+  else
+  {
+    $truncatedString = $textString;  
+  }
+  return $truncatedString;
+}
+
+/* This is currently a stub function that needs to be created.
+ */
+function convertToTimestamp($formattedDate)
+{
+  
+}
+
+/* This is currently a stub function that needs to be created.
+ */
+function convertToDate($timeStamp)
+{
+  
 }
 ?>
