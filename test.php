@@ -13,9 +13,16 @@ and open the template in the editor.
     require_once "functions.php";
     echo "Test Page";
     echo "<br>";
-    $tmpVar = assignPosition("3", "8");
+    date_default_timezone_set('US/Mountain');
+    $curDate = new DateTime();
+    $curTimeStamp = $curDate->getTimestamp();
+    
     echo "<pre>";
-    print_r($tmpVar);
+    print_r($curDate);
+    print_r($curTimeStamp);
+    echo "<br>";
+    $tempVar = truncateString("Jan", "3");
+    echo "$tempVar";
     
     ?>
   </body>
