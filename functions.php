@@ -534,6 +534,58 @@ function addEvent($newEvent)
   return $r_val;
 }
 
+/* This function accepts two optional arguments: full length month name and a
+ * four digit year.  If no arguments are passed the function assumes the current
+ * month of the current year.  It returns all events in the database that fall
+ * under the specified date range.
+ */
+function getMonthEvents($month, $year)
+{
+  $goodData = 0;
+  if(!$month && !$year)
+  {
+    $currentDate = getdate(time());
+    $currentMonth = $currentDate['month'];
+    $currentYear = $currentDate['year'];
+    $goodData = 1;
+  }
+  elseif(!$month)
+  {
+    $currentDate = getdate(time());
+    $currentMonth= $currentDate['month'];
+    $currentYear = $year;
+    $goodData = 1;
+  }
+  elseif(!$year)
+  {
+    $currentDate = getdate(time());
+    $currentYear = $currentDate['year'];
+    $currentMonth = $month;
+    $goodData = 1;
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Error determining month to be used.";
+  }
+  
+  if($goodData)
+  {
+    $monthStart = new DateTime("first day of $currentMonth $currentYear");
+    $monthEnd = new DateTime("last day of $currentMonth $currentYear");
+    echo "<br>";
+    print_r($monthStart);
+    echo "<br>";
+    print_r($monthEnd);
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Uanble to create a good date range for event retrieval.";
+  }
+  return $r_val;
+}
+
 /* This function accepts an abbreviated month name (e.g. JAN, FEB) and converts it
  * to a digit which it then returns.
  */
@@ -570,17 +622,4 @@ function truncateString($textString, $numChars)
   return $truncatedString;
 }
 
-/* This is currently a stub function that needs to be created.
- */
-function convertToTimestamp($formattedDate)
-{
-  
-}
-
-/* This is currently a stub function that needs to be created.
- */
-function convertToDate($timeStamp)
-{
-  
-}
 ?>
