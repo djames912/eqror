@@ -166,9 +166,33 @@ function renderCal() {
             },
             color: 'green',   // a non-ajax option
             textColor: 'white' // a non-ajax option
-        }]
+        }],
+        eventRender: function(event, element) {
+            var edatestamp = event.start.valueOf()/1000;
+            var tmpEvent = {
+                "id": event.id,
+                "title": event.title,
+                "start": edatestamp,
+                "category": 1 // faked category for now
+            };
+            saveEvent(tmpEvent);
+        }
     });
 }
+
+// Saves a calendar event to the DB
+function saveEvent(eventObj) {
+    var params = {
+        "event": eventObj
+    };
+    submitAJAX("newevent",params,showEventResult);
+}
+
+// Show result of event save
+function showEventResult(jsonres) {
+    console.log(JSON.stringify(jsonres));
+}
+
 
 // Submits login authentication request
 function login() {

@@ -5,7 +5,7 @@ require_once 'functions.php';
 /*
  * A list of allowed calls
  */
-$functions = Array('getroster', 'getevents', 'newpos', 'getpositions', 'getmembers', 'getaddresstypes', 'getemailtypes', 'gettelecomtypes');
+$functions = Array('getroster', 'getevents', 'newpos', 'getpositions', 'getmembers', 'getaddresstypes', 'getemailtypes', 'gettelecomtypes', 'newevent');
 
 /*
  * We only allow this method
@@ -131,6 +131,13 @@ function getemailtypes($args = null) {
 function gettelecomtypes($args = null) {
     $telecomtypesdata = getTableContents("addresstypes");
     return json_encode($telecomtypesdata);
+}
+
+// Save the incoming event
+function newevent($args) {
+    $eventObj = (object) $args["event"];
+    error_log(print_r($eventObj,true));
+    return addEvent($eventObj);
 }
 
 /*
