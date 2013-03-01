@@ -36,7 +36,7 @@ function getTableContents($tableName)
  */
 function checkExists($tableName, $fieldName, $searchFor)
 {
-  if(!$tableName || !$fieldName || !$searchFor)
+  if(!isset($tableName) || !isset($fieldName) || !isset($searchFor))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed.";
@@ -48,7 +48,7 @@ function checkExists($tableName, $fieldName, $searchFor)
     $bldQuery = "SELECT * FROM $tableName WHERE $fieldName='$searchFor';";
     $statement = $dbLink->query($bldQuery);
     $row_count = $statement->rowCount();
-    if(!$row_count)
+    if($row_count == 0)
     {
       $r_val['RSLT'] = "1";
       $r_val['MSSG'] = "$searchFor does not exist in $tableName";
@@ -69,7 +69,7 @@ function checkExists($tableName, $fieldName, $searchFor)
  */
 function checkMemberExists($surName, $givenName, $middleName, $suffix)
 {
-  if(!$surName || !$givenName)
+  if(!isset($surName) || !isset($givenName))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed.";
@@ -77,27 +77,27 @@ function checkMemberExists($surName, $givenName, $middleName, $suffix)
   }
   else
   {
-    if($middleName)
+    if(isset($middleName))
       $addMiddle = " AND middlename=?";
-    if($suffix)
+    if(isset($suffix))
       $addSuffix = " AND suffix=?";
     $dbLink = dbconnect();
     $bldQuery = "SELECT * FROM members WHERE surname=? AND givenname=?";
-    if($addMiddle)
+    if(isset($addMiddle))
       $bldQuery = $bldQuery . $addMiddle;
-    if($addSuffix)
+    if(isset($addSuffix))
       $bldQuery = $bldQuery . $addSuffix;
     $statement = $dbLink->prepare($bldQuery);
-    if($middleName && $suffix)
+    if(isset($middleName) && isset($suffix))
       $statement->execute(array($surName, $givenName, $middleName, $suffix));
-    elseif($middleName && !$suffix)
+    elseif(isset($middleName) && !isset($suffix))
       $statement->execute(array($surName, $givenName, $middleName));
-    elseif(!$middleName && $suffix)
+    elseif(!isset($middleName) && isset($suffix))
       $statement->execute(array($surName, $givenName, $suffix));
     else
       $statement->execute(array($surName, $givenName));
     $numRows = $statement->rowCount();
-    if(!$numRows)
+    if($numRows == 0)
     {
       $r_val['RSLT'] = "1";
       $r_val['MSSG'] = "Member not found in database.";
@@ -160,6 +160,7 @@ function addPosition($position)
  */
 function addType($tableName, $labelContent)
 {
+  $typeExists = 0;
   $tmpVar = checkExists($tableName, "label", $labelContent);
   $typeExists = $tmpVar['RSLT'];
   if($tmpVar['MSSG'] == "Incomplete data set passed.")
@@ -169,7 +170,7 @@ function addType($tableName, $labelContent)
   }
   else
   {
-    if($typeExists)
+    if($typeExists != 0)
     {
       try
       {
@@ -202,13 +203,13 @@ function addType($tableName, $labelContent)
  */
 function addMember($surName, $givenName, $middleName, $suffix)
 {
-  if(!$surName || !$givenName)
+  if(!isset($surName) || !isset($givenName))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed: need both a surname and given name.";
   }
   else
-  {
+  {   
     $tmpVar = checkMemberExists($surName, $givenName, $middleName, $suffix);
     $memberExists = $tmpVar['RSLT'];
     if($tmpVar['MSSG'] == "Incomplete data set passed.")
@@ -254,7 +255,7 @@ function addMember($surName, $givenName, $middleName, $suffix)
  */
 function getMemberUID($surName, $givenName, $middleName, $suffix)
 {
-  if(!$surName || !$givenName)
+  if(!isset($surName) || !isset($givenName))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed.";
@@ -262,9 +263,9 @@ function getMemberUID($surName, $givenName, $middleName, $suffix)
   }
   else
   {
-    if($middleName)
+    if(isset($middleName))
       $addMiddle = " AND middlename=?";
-    if($suffix)
+    if(isset($suffix))
       $addSuffix = " AND suffix=?";
     $dbLink = dbconnect();
     $bldQuery = "SELECT uid FROM members WHERE surname=? AND givenname=?";
@@ -273,11 +274,11 @@ function getMemberUID($surName, $givenName, $middleName, $suffix)
     if($addSuffix)
       $bldQuery = $bldQuery . $addSuffix;
     $statement = $dbLink->prepare($bldQuery);
-    if($middleName && $suffix)
+    if(isset($middleName) && isset($suffix))
       $statement->execute(array($surName, $givenName, $middleName, $suffix));
-    elseif($middleName && !$suffix)
+    elseif(isset($middleName) && !isset($suffix))
       $statement->execute(array($surName, $givenName, $middleName));
-    elseif(!$middleName && $suffix)
+    elseif(!isset($middleName) && isset($suffix))
       $statement->execute(array($surName, $givenName, $suffix));
     else
       $statement->execute(array($surName, $givenName));
@@ -302,7 +303,7 @@ function getMemberUID($surName, $givenName, $middleName, $suffix)
  */
 function getTypeID($tableName, $labelName)
 {
-  if(! $tableName || !$labelName)
+  if(!isset($tableName) || !isset($labelName))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed.";
@@ -344,7 +345,7 @@ function getTypeID($tableName, $labelName)
  */
 function getTypeLabel($tableName, $labelID)
 {
-  if(! $tableName || !$labelID)
+  if(!isset($tableName) || !isset($labelID))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed.";
@@ -389,7 +390,7 @@ function getTypeLabel($tableName, $labelID)
  */
 function addEmail($UID, $emailAddress, $typeID, $preferred)
 {
-  if(!$UID || !$emailAddress || !$typeID)
+  if(!isset($UID) || !isset($emailAddress) || !isset($typeID))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed.";
@@ -408,10 +409,10 @@ function addEmail($UID, $emailAddress, $typeID, $preferred)
     {
       if($checkVar)
       {
-        if(!$preferred)
-          $preferred = "0";
-        else
+        if(isset($preferred))
           $preferred = "1";
+        else
+          $preferred = "0";
         try
         {
           $bldQuery = "INSERT INTO email(uid, emailaddr, typeid, preferred) VALUES
@@ -445,7 +446,7 @@ function addEmail($UID, $emailAddress, $typeID, $preferred)
  */
 function assignPosition($UID, $PID)
 {
-  if(!$UID || !$PID)
+  if(!isset($UID) || !isset($PID))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed.";
@@ -498,20 +499,15 @@ function addEvent($newEvent)
   }
   else
   {
-    if(!($newEvent->title && $newEvent->start && $newEvent->category))
+    if(!(isset($newEvent->title) && isset($newEvent->start) && isset($newEvent->category)))
     {
       $r_val['RSLT'] = "1";
       $r_val['MSSG'] = "Incomplete data set passed.";
     }
     else
-    {
-      $newEvent->start = convertToTimestamp($formattedDate);
-      
-      if(!$newEvent->end)
-        $newEvent->end = "NULL";
-      else
-        $newEvent->end = convertToTimestamp($formattedDate);
-      
+    {   
+      if(!isset($newEvent->end))
+        $newEvent->end = "NULL"; 
       try
       {
         $bldQuery = "INSERT INTO events(title, start, end, category)
@@ -542,21 +538,21 @@ function addEvent($newEvent)
 function getMonthEvents($month, $year)
 {
   $goodData = 0;
-  if(!$month && !$year)
+  if(!isset($month) && !isset($year))
   {
     $currentDate = getdate(time());
     $currentMonth = $currentDate['month'];
     $currentYear = $currentDate['year'];
     $goodData = 1;
   }
-  elseif(!$month)
+  elseif(!isset($month))
   {
     $currentDate = getdate(time());
     $currentMonth= $currentDate['month'];
     $currentYear = $year;
     $goodData = 1;
   }
-  elseif(!$year)
+  elseif(!isset($year))
   {
     $currentDate = getdate(time());
     $currentYear = $currentDate['year'];
@@ -569,7 +565,7 @@ function getMonthEvents($month, $year)
     $r_val['MSSG'] = "Error determining month to be used.";
   }
   
-  if($goodData)
+  if($goodData == 1)
   {
     $monthStart = new DateTime("first day of $currentMonth $currentYear");
     $monthEnd = new DateTime("last day of $currentMonth $currentYear");
