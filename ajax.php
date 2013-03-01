@@ -47,6 +47,7 @@ $events = json_decode('[
 /*
  * Generic error generator
  */
+
 function genErr($msg) {
     $error = Array();
     $error['status'] = 'failed';
@@ -86,8 +87,7 @@ function getroster($args = null) {
 // Returns event data as JSON
 //    TODO: only send data if authenticated
 function getevents($args = null) {
-    global $events;
-    return json_encode($events);
+    return json_encode(getMonthEvents(null, null));
 }
 
 // Returns result as JSON
@@ -136,9 +136,9 @@ function gettelecomtypes($args = null) {
 // Save the incoming event
 function newevent($args) {
     $eventObj = (object) $args["event"];
-    error_log(print_r($eventObj,true));
-    return addEvent($eventObj);
+    return json_encode(addEvent($eventObj));
 }
+
 
 /*
  * Reply to AJAX request
