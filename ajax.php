@@ -87,7 +87,8 @@ function getroster($args = null) {
 // Returns event data as JSON
 //    TODO: only send data if authenticated
 function getevents($args = null) {
-    return json_encode(getMonthEvents(null, null));
+    $result = getMonthEvents(null, null);
+    return json_encode($result["DATA"]);
 }
 
 // Returns result as JSON
