@@ -13,7 +13,8 @@ and open the template in the editor.
     require_once "functions.php";
     echo "Test Page";
     echo "<br>";
-    
+    echo "<pre>";
+
     ?>
   </body>
 </html>

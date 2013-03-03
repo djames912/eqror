@@ -67,8 +67,10 @@ function checkExists($tableName, $fieldName, $searchFor)
  * name and/or suffix as arguments.  It returns whether or not the name is already
  * in the database.
  */
-function checkMemberExists($surName, $givenName, $middleName, $suffix)
+function checkMemberExists($surName, $givenName, $middleName = NULL, $suffix = NULL)
 {
+  $addMiddle = false;
+  $addSuffix = false;
   if(!isset($surName) || !isset($givenName))
   {
     $r_val['RSLT'] = "1";
@@ -77,22 +79,22 @@ function checkMemberExists($surName, $givenName, $middleName, $suffix)
   }
   else
   {
-    if(isset($middleName))
+    if(!is_null($middleName))
       $addMiddle = " AND middlename=?";
-    if(isset($suffix))
+    if(!is_null($suffix))
       $addSuffix = " AND suffix=?";
     $dbLink = dbconnect();
     $bldQuery = "SELECT * FROM members WHERE surname=? AND givenname=?";
-    if(isset($addMiddle))
+    if($addMiddle)
       $bldQuery = $bldQuery . $addMiddle;
-    if(isset($addSuffix))
+    if($addSuffix)
       $bldQuery = $bldQuery . $addSuffix;
     $statement = $dbLink->prepare($bldQuery);
-    if(isset($middleName) && isset($suffix))
+    if(!is_null($middleName) && !is_null($suffix))
       $statement->execute(array($surName, $givenName, $middleName, $suffix));
-    elseif(isset($middleName) && !isset($suffix))
+    elseif(!is_null($middleName) && is_null($suffix))
       $statement->execute(array($surName, $givenName, $middleName));
-    elseif(!isset($middleName) && isset($suffix))
+    elseif(is_null($middleName) && !is_null($suffix))
       $statement->execute(array($surName, $givenName, $suffix));
     else
       $statement->execute(array($surName, $givenName));
@@ -160,7 +162,6 @@ function addPosition($position)
  */
 function addType($tableName, $labelContent)
 {
-  $typeExists = 0;
   $tmpVar = checkExists($tableName, "label", $labelContent);
   $typeExists = $tmpVar['RSLT'];
   if($tmpVar['MSSG'] == "Incomplete data set passed.")
@@ -170,7 +171,7 @@ function addType($tableName, $labelContent)
   }
   else
   {
-    if($typeExists != 0)
+    if($typeExists)
     {
       try
       {
@@ -201,20 +202,28 @@ function addType($tableName, $labelContent)
  * the given name, an opptional middle name (or initial) and an optional suffix.
  * It returns whether or not the insert was successful or not.
  */
-function addMember($surName, $givenName, $middleName, $suffix)
+function addMember($surName, $givenName, $middleName = NULL, $suffix = NULL)
 {
+  $memberExists = false;
   if(!isset($surName) || !isset($givenName))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed: need both a surname and given name.";
   }
   else
-  {   
-    $tmpVar = checkMemberExists($surName, $givenName, $middleName, $suffix);
+  {
+    if(is_null($middleName)  && is_null($suffix))
+      $tmpVar = checkMemberExists($surName, $givenName);
+    elseif(is_null($middleName) && !is_null($suffix))
+      $tmpVar = checkMemberExists($surName, $givenName, "", $suffix);
+    elseif(!is_null($middleName) && is_null($suffix))
+      $tmpVar = checkMemberExists ($surName, $givenName, $middleName);
+    else
+      $tmpVar = checkMemberExists($surName, $givenName, $middleName, $suffix);
     $memberExists = $tmpVar['RSLT'];
     if($tmpVar['MSSG'] == "Incomplete data set passed.")
     {
-      $r_val['RSTL'] = "1";
+      $r_val['RSLT'] = "1";
       $r_val['MSSG'] = "Internal function error: " . $tmpVar['MSSG'];
     }
     else
@@ -253,8 +262,10 @@ function addMember($surName, $givenName, $middleName, $suffix)
  * returns the UID of the member being looked for as part of the 'MSSG' member of
  * the array.
  */
-function getMemberUID($surName, $givenName, $middleName, $suffix)
+function getMemberUID($surName, $givenName, $middleName = NULL, $suffix = NULL)
 {
+  $addMiddle = false;
+  $addSuffix = false;
   if(!isset($surName) || !isset($givenName))
   {
     $r_val['RSLT'] = "1";
@@ -263,9 +274,9 @@ function getMemberUID($surName, $givenName, $middleName, $suffix)
   }
   else
   {
-    if(isset($middleName))
+    if(!is_null($middleName))
       $addMiddle = " AND middlename=?";
-    if(isset($suffix))
+    if(!is_null($suffix))
       $addSuffix = " AND suffix=?";
     $dbLink = dbconnect();
     $bldQuery = "SELECT uid FROM members WHERE surname=? AND givenname=?";
@@ -388,8 +399,9 @@ function getTypeLabel($tableName, $labelID)
  * reminder scheduler will select by default.  The function returns whether or not
  * the insert was successful.
  */
-function addEmail($UID, $emailAddress, $typeID, $preferred)
+function addEmail($UID, $emailAddress, $typeID, $preferred = NULL)
 {
+  $checkVar = false;
   if(!isset($UID) || !isset($emailAddress) || !isset($typeID))
   {
     $r_val['RSLT'] = "1";
@@ -409,10 +421,10 @@ function addEmail($UID, $emailAddress, $typeID, $preferred)
     {
       if($checkVar)
       {
-        if(isset($preferred))
-          $preferred = "1";
-        else
+        if(is_null($preferred))
           $preferred = "0";
+        else
+          $preferred = "1";
         try
         {
           $bldQuery = "INSERT INTO email(uid, emailaddr, typeid, preferred) VALUES
@@ -535,24 +547,25 @@ function addEvent($newEvent)
  * month of the current year.  It returns all events in the database that fall
  * under the specified date range.
  */
-function getMonthEvents($month, $year)
+function getMonthEvents($month = NULL, $year = NULL)
 {
   $goodData = 0;
-  if(!isset($month) && !isset($year))
+  date_default_timezone_set('US/Mountain');
+  if(is_null($month) && is_null($year))
   {
     $currentDate = getdate(time());
     $currentMonth = $currentDate['month'];
     $currentYear = $currentDate['year'];
     $goodData = 1;
   }
-  elseif(!isset($month))
+  elseif(is_null($month) && !is_null($year))
   {
     $currentDate = getdate(time());
     $currentMonth= $currentDate['month'];
     $currentYear = $year;
     $goodData = 1;
   }
-  elseif(!isset($year))
+  elseif(!is_null($month) && is_null($year))
   {
     $currentDate = getdate(time());
     $currentYear = $currentDate['year'];
@@ -567,12 +580,35 @@ function getMonthEvents($month, $year)
   
   if($goodData == 1)
   {
-    $monthStart = new DateTime("first day of $currentMonth $currentYear");
-    $monthEnd = new DateTime("last day of $currentMonth $currentYear");
-    echo "<br>";
-    print_r($monthStart);
-    echo "<br>";
-    print_r($monthEnd);
+    try
+    {
+      $rangeStart = new DateTime("first day of $currentMonth $currentYear");
+      $rangeEnd = new DateTime("last day of $currentMonth $currentYear");
+      $timeStampStart = $rangeStart->getTimestamp();
+      $timeStampEnd = ($rangeEnd->getTimestamp()) + 86400;
+      $bldQuery = "SELECT * FROM events WHERE start >= '$timeStampStart' AND start < '$timeStampEnd'";
+      $dbLink = dbconnect();
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+      if(!$result)
+      {
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "No events located matching date range provided.";
+      }
+      else
+      {
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = "Event data located and retrieved.";
+        $r_val['DATA'] = $result;
+      }
+    }
+    catch(PDOException $exception)
+    {
+      echo "Unable to retrieve requested data.  Sorry";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = $exception->getMessage();
+    }
   }
   else
   {
