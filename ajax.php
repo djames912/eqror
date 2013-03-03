@@ -140,6 +140,11 @@ function newevent($args) {
     return json_encode(addEvent($eventObj));
 }
 
+// Updates the incoming event
+function modevent($args) {
+    $eventObj = (object) $args["event"];
+    return json_encode(addEvent($eventObj));
+}
 
 /*
  * Reply to AJAX request

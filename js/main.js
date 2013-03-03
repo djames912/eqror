@@ -177,7 +177,13 @@ function renderCal() {
                 "start": edatestamp,
                 "category": 1 // faked category for now
             };
-            saveEvent(tmpEvent);
+            if (typeof event.eid == "undefined") {
+                saveEvent(tmpEvent);
+            } else {
+                tmpEvent.eid = event.eid;
+                console.log("event needs to be updated in the DB");
+                //updateEvent(tmpEvent);
+            }
         }
     });
 }
@@ -188,6 +194,14 @@ function saveEvent(eventObj) {
         "event": eventObj
     };
     submitAJAX("newevent",params,showEventResult);
+}
+
+// Updates a calendar event in the DB
+function updateEvent(eventObj) {
+    var params = {
+        "event": eventObj
+    };
+    submitAJAX("modevent",params,showEventResult);
 }
 
 // Show result of event save
