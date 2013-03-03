@@ -590,7 +590,7 @@ function getMonthEvents($month = NULL, $year = NULL)
       $dbLink = dbconnect();
       $statement = $dbLink->prepare($bldQuery);
       $statement->execute();
-      $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+      $result = $statement->fetchAll(PDO::FETCH_OBJ);
       if(!$result)
       {
         $r_val['RSLT'] = "1";
