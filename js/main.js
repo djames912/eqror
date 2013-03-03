@@ -88,6 +88,8 @@ function testResult(jsObj) {
     
     if (result == false) {
         showMsg(obj.MSSG, true);
+    } else {
+        showMsg("Server request was successful");
     }
     return result;
 }
@@ -99,19 +101,19 @@ function consoleLog(msg) {
     }
 }
 
-// Show error
+// Show messages
 function showMsg(message,error) {
     if (typeof error == "undefined") error = false;
     
     if (error == true) newclass = "error";
     else newclass = "message";
     
-    consoleLog(newclass + ": " + message);
+    //consoleLog(newclass + ": " + message);
     
     $("#msg").stop(true,true).text(message).addClass(newclass).fadeIn("fast", function() {
         // Flash once then stay visible for 5 seconds
         $(this).fadeOut("slow").fadeIn("slow").delay(5000).fadeOut("fast", function() {
-            $(this).text("").removeClass(newclass);
+            $(this).text("").removeClass();
         });     
     })
 }
@@ -190,13 +192,22 @@ function saveEvent(eventObj) {
 
 // Show result of event save
 function showEventResult(jsonres) {
-    console.log(JSON.stringify(jsonres));
+    //console.log(JSON.stringify(jsonres));
 }
 
+function loadEvents() {
+    var params = {}
+    submitAJAX("feetchevents",params,showEventResult);
+}
 
 // Submits login authentication request
 function login() {
     
+}
+
+// Initiates AJAX call to get event data, uses refreshevents() as callback
+function loadevents() {
+    submitAJAX("getevents",null,refreshevents);
 }
 
 
@@ -258,10 +269,7 @@ function updateroster() {
     
 }
 
-// Initiates AJAX call to get event data, uses refreshevents() as callback
-function loadevents() {
-    submitAJAX("getevents",null,refreshevents);
-}
+
 
 
 
