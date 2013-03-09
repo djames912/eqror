@@ -135,6 +135,7 @@ CREATE TABLE `members` (
   `givenname` varchar(32) NOT NULL,
   `middlename` varchar(32) NOT NULL,
   `suffix` varchar(8) NOT NULL,
+  `preferred` varchar(8) NOT NULL,
   `password` varchar(64) NOT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;

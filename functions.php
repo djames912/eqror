@@ -542,6 +542,46 @@ function addEvent($newEvent)
   return $r_val;
 }
 
+/* This function accepts an event object that contains updated information as an
+ * argument and then updates the database contents to match what is contained in
+ * the object.
+ */
+function updateEvent($updatedEvent)
+{
+  if(!is_object($updatedEvent))
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Object expected.  Something else was passed.";
+  }
+  else
+  {
+    if(!isset($updatedEvent->eid))
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Missing EID.  Unable to continue.";
+    }
+    else
+    {
+      try
+      {
+        $bldQuery = "UPDATE events SET title='$updatedEvent->title', start='$updatedEvent->start', end='$updatedEvent->end', category='$updatedEvent->category' WHERE eid='$updatedEvent->eid';";
+        $dbLink = dbconnect();
+        $statement = $dbLink->prepare($bldQuery);
+        $statement->execute();
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = "Event record update successful.";
+      }
+      catch(PDOException $exception)
+      {
+        echo "Unable to update event.";
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "Record update failed: " . $exception->getMessage();
+      }
+    }
+  }
+  return $r_val;
+}
+
 /* This function accepts two optional arguments: full length month name and a
  * four digit year.  If no arguments are passed the function assumes the current
  * month of the current year.  It returns all events in the database that fall
