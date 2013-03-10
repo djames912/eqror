@@ -202,7 +202,7 @@ function addType($tableName, $labelContent)
  * the given name, an opptional middle name (or initial) and an optional suffix.
  * It returns whether or not the insert was successful or not.
  */
-function addMember($surName, $givenName, $middleName = NULL, $suffix = NULL)
+function addMember($surName, $givenName, $middleName = NULL, $suffix = NULL, $preferred = NULL)
 {
   $memberExists = false;
   if(!isset($surName) || !isset($givenName))
@@ -217,7 +217,7 @@ function addMember($surName, $givenName, $middleName = NULL, $suffix = NULL)
     elseif(is_null($middleName) && !is_null($suffix))
       $tmpVar = checkMemberExists($surName, $givenName, "", $suffix);
     elseif(!is_null($middleName) && is_null($suffix))
-      $tmpVar = checkMemberExists ($surName, $givenName, $middleName);
+      $tmpVar = checkMemberExists($surName, $givenName, $middleName);
     else
       $tmpVar = checkMemberExists($surName, $givenName, $middleName, $suffix);
     $memberExists = $tmpVar['RSLT'];
@@ -233,8 +233,8 @@ function addMember($surName, $givenName, $middleName = NULL, $suffix = NULL)
         try
         {
           $dbLink = dbconnect();
-          $bldQuery = "INSERT INTO members(surname, givenname, middlename, suffix)
-            VALUES('$surName', '$givenName', '$middleName', '$suffix');";
+          $bldQuery = "INSERT INTO members(surname, givenname, middlename, suffix, preferred)
+            VALUES('$surName', '$givenName', '$middleName', '$suffix', '$preferred');";
           $statement = $dbLink->prepare($bldQuery);
           $statement->execute();
           $r_val['RSLT'] = "0";
@@ -285,11 +285,11 @@ function getMemberUID($surName, $givenName, $middleName = NULL, $suffix = NULL)
     if($addSuffix)
       $bldQuery = $bldQuery . $addSuffix;
     $statement = $dbLink->prepare($bldQuery);
-    if(isset($middleName) && isset($suffix))
+    if(!is_null($middleName) && !is_null($suffix))
       $statement->execute(array($surName, $givenName, $middleName, $suffix));
-    elseif(isset($middleName) && !isset($suffix))
+    elseif(!is_null($middleName) && is_null($suffix))
       $statement->execute(array($surName, $givenName, $middleName));
-    elseif(!isset($middleName) && isset($suffix))
+    elseif(is_null($middleName) && !is_null($suffix))
       $statement->execute(array($surName, $givenName, $suffix));
     else
       $statement->execute(array($surName, $givenName));
