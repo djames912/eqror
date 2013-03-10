@@ -530,6 +530,7 @@ function addEvent($newEvent)
         $statement->execute();
         $r_val['RSLT'] = "0";
         $r_val['MSSG'] = "Insert into database successful.";
+        $r_val['DATA'] = $dbLink->lastInsertId();
       }
       catch(PDOException $exception)
       {
@@ -654,6 +655,46 @@ function getMonthEvents($month = NULL, $year = NULL)
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Uanble to create a good date range for event retrieval.";
+  }
+  return $r_val;
+}
+
+/* This function accepts a position title and returns the ID for that title.
+ */
+function getPositionID($assignment)
+{
+  if(isset($assignment))
+  {
+    try
+    {
+      $dbLink = dbconnect();
+      $bldQuery = "SELECT id FROM positions WHERE assignment='$assignment';";
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $result = $statement->fetchObject();
+      if(!$result)
+      {
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "Label name not found in database.";
+      }
+      else
+      {
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = "Label name found in database.";
+        $r_val['DATA'] = $result->id;
+      }
+    }
+    catch(PDOException $exception)
+    {
+      echo "Unable to retrieve requested data.  Sorry";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Record retrieval failed: " . $exception->getMessage();
+    }
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "No assignment passed.";
   }
   return $r_val;
 }
