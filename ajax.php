@@ -5,7 +5,17 @@ require_once 'functions.php';
 /*
  * A list of allowed calls
  */
-$functions = Array('getroster', 'getevents', 'newpos', 'getpositions', 'getmembers', 'getaddresstypes', 'getemailtypes', 'gettelecomtypes', 'newevent');
+$functions = Array(
+    'getroster', 
+    'getevents', 
+    'newpos', 
+    'getpositions', 
+    'getmembers', 
+    'getaddresstypes', 
+    'getemailtypes', 
+    'gettelecomtypes', 
+    'newevent', 
+    'modevent');
 
 /*
  * We only allow this method
@@ -88,6 +98,10 @@ function getroster($args = null) {
 //    TODO: only send data if authenticated
 function getevents($args = null) {
     $result = getMonthEvents(null, null);
+//    foreach ($result["DATA"] as $event) {
+//        if ($event->end < 1)
+//            $event->allDay = true;
+//    }
     return json_encode($result["DATA"]);
 }
 
@@ -143,7 +157,7 @@ function newevent($args) {
 // Updates the incoming event
 function modevent($args) {
     $eventObj = (object) $args["event"];
-    return json_encode(addEvent($eventObj));
+    return json_encode(updateEvent($eventObj));
 }
 
 /*

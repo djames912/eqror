@@ -170,19 +170,25 @@ function renderCal() {
             textColor: 'white' // a non-ajax option
         }],
         eventRender: function(event, element) {
-            var edatestamp = event.start.valueOf()/1000;
+            var startdatestamp = event.start.valueOf()/1000;
+            
             var tmpEvent = {
                 "id": event.id,
                 "title": event.title,
-                "start": edatestamp,
+                "start": startdatestamp,
                 "category": 1 // faked category for now
             };
+            
+            if (typeof event.end == null) {
+                var enddatestamp = event.end.valueOf()/1000;
+                tmpEvent.end = enddatestamp;
+            }
+            
             if (typeof event.eid == "undefined") {
                 saveEvent(tmpEvent);
             } else {
                 tmpEvent.eid = event.eid;
-                console.log("event needs to be updated in the DB");
-                //updateEvent(tmpEvent);
+                updateEvent(tmpEvent);
             }
         }
     });
