@@ -519,9 +519,9 @@ function addEvent($newEvent)
     else
     {   
       if(!isset($newEvent->end))
-        $newEvent->end = 0;
+        $newEvent->end = "0";
       if(!isset($netEvent->rid))
-        $newEvent->rid = 0;
+        $newEvent->rid = "0";
       try
       {
         $bldQuery = "INSERT INTO events(rid, title, start, end, category)
@@ -566,9 +566,9 @@ function updateEvent($updatedEvent)
     else
     {
       if(!isset($updatedEvent->rid))
-        $updatedEvent->rid = 0;
+        $updatedEvent->rid = "0";
       if(!isset($updatedEvent->end))
-        $updatedEvent->rid = 0;
+        $updatedEvent->rid = "0";
       try
       {
         $bldQuery = "UPDATE events SET rid='$updatedEvent->rid', title='$updatedEvent->title', start='$updatedEvent->start', end='$updatedEvent->end', category='$updatedEvent->category' WHERE eid='$updatedEvent->eid';";
@@ -647,6 +647,17 @@ function getMonthEvents($month = NULL, $year = NULL)
       {
         $r_val['RSLT'] = "0";
         $r_val['MSSG'] = "Event data located and retrieved.";
+        foreach($result as $indEvent)
+        {
+          if(!$indEvent->rid)
+            $indEvent->recurring = "false";
+          else
+            $indEvent->recurring = "true";
+          if(!$indEvent->end)
+            $indEvent->allday = "true";
+          else
+            $indEvent->allday = "false";
+        }
         $r_val['DATA'] = $result;
       }
     }
