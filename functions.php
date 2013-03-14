@@ -650,9 +650,9 @@ function getMonthEvents($month = NULL, $year = NULL)
         foreach($result as $indEvent)
         {
           if(!$indEvent->rid)
-            $indEvent->recurring = "false";
+            $indEvent->id = "0";
           else
-            $indEvent->recurring = "true";
+            $indEvent->id = $indEvent->rid;
           if(!$indEvent->end)
             $indEvent->allDay = true;
           else
