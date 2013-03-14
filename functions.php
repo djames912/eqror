@@ -654,9 +654,9 @@ function getMonthEvents($month = NULL, $year = NULL)
           else
             $indEvent->recurring = "true";
           if(!$indEvent->end)
-            $indEvent->allday = "true";
+            $indEvent->allDay = true;
           else
-            $indEvent->allday = "false";
+            $indEvent->allDay = false;
         }
         $r_val['DATA'] = $result;
       }
