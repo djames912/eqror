@@ -100,6 +100,7 @@ DROP TABLE IF EXISTS `events`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `events` (
   `eid` int(11) NOT NULL AUTO_INCREMENT,
+  `rid` int(11) NOT NULL,
   `title` varchar(32) NOT NULL,
   `start` double NOT NULL,
   `end` double NOT NULL,
