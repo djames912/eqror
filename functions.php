@@ -519,11 +519,13 @@ function addEvent($newEvent)
     else
     {   
       if(!isset($newEvent->end))
-        $newEvent->end = "NULL"; 
+        $newEvent->end = 0;
+      if(!isset($netEvent->rid))
+        $newEvent->rid = 0;
       try
       {
-        $bldQuery = "INSERT INTO events(title, start, end, category)
-          VALUES('$newEvent->title', '$newEvent->start', '$newEvent->end', 
+        $bldQuery = "INSERT INTO events(rid, title, start, end, category)
+          VALUES('$newEvent->rid', '$newEvent->title', '$newEvent->start', '$newEvent->end', 
             '$newEvent->category');";
         $dbLink = dbconnect();
         $statement = $dbLink->prepare($bldQuery);
@@ -563,9 +565,13 @@ function updateEvent($updatedEvent)
     }
     else
     {
+      if(!isset($updatedEvent->rid))
+        $updatedEvent->rid = 0;
+      if(!isset($updatedEvent->end))
+        $updatedEvent->rid = 0;
       try
       {
-        $bldQuery = "UPDATE events SET title='$updatedEvent->title', start='$updatedEvent->start', end='$updatedEvent->end', category='$updatedEvent->category' WHERE eid='$updatedEvent->eid';";
+        $bldQuery = "UPDATE events SET rid='$updatedEvent->rid', title='$updatedEvent->title', start='$updatedEvent->start', end='$updatedEvent->end', category='$updatedEvent->category' WHERE eid='$updatedEvent->eid';";
         $dbLink = dbconnect();
         $statement = $dbLink->prepare($bldQuery);
         $statement->execute();
