@@ -568,7 +568,7 @@ function updateEvent($updatedEvent)
       if(!isset($updatedEvent->rid))
         $updatedEvent->rid = "0";
       if(!isset($updatedEvent->end))
-        $updatedEvent->rid = "0";
+        $updatedEvent->end = "0";
       try
       {
         $bldQuery = "UPDATE events SET rid='$updatedEvent->rid', title='$updatedEvent->title', start='$updatedEvent->start', end='$updatedEvent->end', category='$updatedEvent->category' WHERE eid='$updatedEvent->eid';";
