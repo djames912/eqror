@@ -649,10 +649,11 @@ function getMonthEvents($month = NULL, $year = NULL)
         $r_val['MSSG'] = "Event data located and retrieved.";
         foreach($result as $indEvent)
         {
-          if(!$indEvent->rid)
-            $indEvent->id = "0";
-          else
-            $indEvent->id = $indEvent->rid;
+          //if(!$indEvent->rid)
+          //  $indEvent->id = "0";
+          //else
+          //  $indEvent->id = $indEvent->rid;
+          $indEvent->id = $indEvent->eid;
           if(!$indEvent->end)
             $indEvent->allDay = true;
           else
