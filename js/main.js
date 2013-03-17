@@ -4,9 +4,12 @@
  * 
  */
 $(function() {
+    // Loaded events
+    window.events = [];
+
     // Prep tab data to be jQueryUI-ized
-    $( ".tabs" ).tabs({
-        activate: function( event, ui ) {
+    $(".tabs").tabs({
+        activate: function(event, ui) {
             var tabname = ui.newTab[0].id;
             if (tabname == "calendar") {
                 renderCal();
@@ -14,17 +17,17 @@ $(function() {
                 renderRoster();
             }
         }
-    }).addClass( "ui-tabs-vertical ui-helper-clearfix" );
-    $( ".tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
-    
+    }).addClass("ui-tabs-vertical ui-helper-clearfix");
+    $(".tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
+
     // Listen for Enter key on position input
     $("#position").keypress(function(event) {
-        if ( event.which == 13 ) {
+        if (event.which == 13) {
             event.preventDefault();
             $("#submitpos").click();
         }
     });
-    
+
     // Hide message divs (we'll show them later)
     //$(".error").hide();
     $(".message").hide();
@@ -40,41 +43,43 @@ $(function() {
  * Functions
  * 
  */
-function submitAJAX(func,jsondata,callback) {
+function submitAJAX(func, jsondata, callback) {
     //consoleLog("raw json request data ("+func+"): "+JSON.stringify(jsondata));
     $.ajax({
         type: "POST",
         url: "ajax.php",
         data: {
-            func: func, 
+            func: func,
             args: jsondata
         }
     }).done(function(msg) {
         //consoleLog("raw ajax reply: "+msg);
         if (isJSON(msg)) {
-            if (testResult(msg)) {
-                if (callback != null) {
-                    callback(jQuery.parseJSON(msg));
+            if (func == 'getevents' || testResult(msg)) {
+                var msgObj = jQuery.parseJSON(msg);
+                if (typeof callback != "undefined") {
+                    callback(msgObj);
                 } else {
-                    return msg;
+                    return msgObj;
                 }
             }
         } else {
             showMsg("Unable to understand server reply.", true);
             return;
-        }        
+        }
     });
 }
 
 // Test AJAX result for valid JSON
 function isJSON(jsonString) {
     // Do we even need this test?
-    if (jsonString === null) return false;
-    
+    if (jsonString === null)
+        return false;
+
     try {
         var a = JSON.parse(jsonString);
         return true;
-    } catch(e) {
+    } catch (e) {
         return false;
     }
 }
@@ -83,9 +88,10 @@ function isJSON(jsonString) {
 function testResult(jsObj) {
     var result = false;
     var obj = JSON.parse(jsObj);
-    
-    if (parseInt(obj.RSLT) == 0) result = true;
-    
+
+    if (parseInt(obj.RSLT) == 0)
+        result = true;
+
     if (result == false) {
         showMsg(obj.MSSG, true);
     } else {
@@ -102,19 +108,22 @@ function consoleLog(msg) {
 }
 
 // Show messages
-function showMsg(message,error) {
-    if (typeof error == "undefined") error = false;
-    
-    if (error == true) newclass = "error";
-    else newclass = "message";
-    
+function showMsg(message, error) {
+    if (typeof error == "undefined")
+        error = false;
+
+    if (error == true)
+        newclass = "error";
+    else
+        newclass = "message";
+
     //consoleLog(newclass + ": " + message);
-    
-    $("#msg").stop(true,true).text(message).addClass(newclass).fadeIn("fast", function() {
+
+    $("#msg").stop(true, true).text(message).addClass(newclass).fadeIn("fast", function() {
         // Flash once then stay visible for 5 seconds
         $(this).fadeOut("slow").fadeIn("slow").delay(5000).fadeOut("fast", function() {
             $(this).text("").removeClass();
-        });     
+        });
     })
 }
 
@@ -143,14 +152,14 @@ function renderCal() {
             var title = prompt('Event Title:');
             if (title) {
                 $('#tcal').fullCalendar('renderEvent',
-                {
-                    title: title,
-                    start: start,
-                    end: end,
-                    allDay: allDay
-                },
+                        {
+                            title: title,
+                            start: start,
+                            end: end,
+                            allDay: allDay
+                        },
                 true // make the event "stick"
-                );
+                        );
             }
             $('#tcal').fullCalendar('unselect');
         },
@@ -166,28 +175,54 @@ function renderCal() {
             error: function() {
                 showMsg("There was an error while fetching events!", true);
             },
-            color: 'green',   // a non-ajax option
+            color: 'green', // a non-ajax option
             textColor: 'white' // a non-ajax option
         }],
         eventRender: function(event, element) {
-            var startdatestamp = event.start.valueOf()/1000;
+            var startdatestamp = event.start.valueOf() / 1000;
+            var enddatestamp = 0;
+
+            if (event.end != null)
+                enddatestamp = event.end.valueOf() / 1000;
             
             var tmpEvent = {
-                "id": event.id,
                 "title": event.title,
                 "start": startdatestamp,
+                "end": enddatestamp,
                 "category": 1 // faked category for now
             };
-            
-            if (typeof event.end == null) {
-                var enddatestamp = event.end.valueOf()/1000;
+
+            if (event.end != null) {
+                var enddatestamp = event.end.valueOf() / 1000;
                 tmpEvent.end = enddatestamp;
             }
-            
+
             if (typeof event.eid == "undefined") {
                 saveEvent(tmpEvent);
-            } else {
-                tmpEvent.eid = event.eid;
+            }
+//            else {
+//                tmpEvent.eid = event.eid;
+//                updateEvent(tmpEvent);
+//            }
+        } ,
+        eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+            if (typeof event.eid != "undefined") {
+                var startdatestamp = event.start.valueOf() / 1000;
+                var enddatestamp = 0;
+                
+                if (event.allDay == false && event.end == null)
+                    enddatestamp = startdatestamp + (7200);   // fullCalendar Defaults to two hours long
+                else if (event.allDay == false && event.end != null)
+                    enddatestamp = event.end.valueOf() / 1000;
+
+                var tmpEvent = {
+                    "eid": event.eid,
+                    "title": event.title,
+                    "start": startdatestamp,
+                    "end": enddatestamp,
+                    "category": 1 // faked category for now
+                };
+
                 updateEvent(tmpEvent);
             }
         }
@@ -199,7 +234,9 @@ function saveEvent(eventObj) {
     var params = {
         "event": eventObj
     };
-    submitAJAX("newevent",params,showEventResult);
+    submitAJAX("newevent", params, showEventResult);
+    $("#tcal").fullCalendar('removeEvents');
+    $("#tcal").fullCalendar('refetchEvents');
 }
 
 // Updates a calendar event in the DB
@@ -207,7 +244,9 @@ function updateEvent(eventObj) {
     var params = {
         "event": eventObj
     };
-    submitAJAX("modevent",params,showEventResult);
+    submitAJAX("modevent", params, showEventResult);
+//    $("#tcal").fullCalendar('removeEvents');
+//    $("#tcal").fullCalendar('refetchEvents');
 }
 
 // Show result of event save
@@ -215,19 +254,9 @@ function showEventResult(jsonres) {
     //console.log(JSON.stringify(jsonres));
 }
 
-function loadEvents() {
-    var params = {}
-    submitAJAX("feetchevents",params,showEventResult);
-}
-
 // Submits login authentication request
 function login() {
-    
-}
 
-// Initiates AJAX call to get event data, uses refreshevents() as callback
-function loadevents() {
-    submitAJAX("getevents",null,refreshevents);
 }
 
 
@@ -241,17 +270,17 @@ function loadevents() {
  */
 // Takes JSON announcement data and populates announcements
 function loadannouncements() {
-    
+
 }
 
 // Submits new announcement (then re-fetch announcements)
 function addannouncement() {
-    
+
 }
 
 // Submits announcement change (then re-fetch announcements)
 function editannounement() {
-    
+
 }
 
 
@@ -268,8 +297,8 @@ function buildroster(jsondata) {
     $('#rfamily_container').empty();
     $.each(jsondata, function() {
         var fam = document.createElement("div")
-        $(fam).addClass("container_16 rfamily");  
-        $.each(this, function(field,value) {
+        $(fam).addClass("container_16 rfamily");
+        $.each(this, function(field, value) {
             var part = document.createElement("div");
             $(part).addClass("grid_2 ellipse " + field);
             $(part).html(value);
@@ -281,12 +310,12 @@ function buildroster(jsondata) {
 
 // Initiates AJAX call to get roster data, uses buildroster() as callback
 function renderRoster() {
-    submitAJAX("getroster",null,buildroster);
+    submitAJAX("getroster", null, buildroster);
 }
 
 // Submits roster change(s) (then re-fetches roster)
 function updateroster() {
-    
+
 }
 
 
@@ -306,13 +335,13 @@ function addPosition() {
     var params = {
         "position": newposition
     };
-    submitAJAX("newpos",params,showPosResult);
+    submitAJAX("newpos", params, showPosResult);
 }
 
 // Render result of addPosition()
 function showPosResult(jsonres) {
     var stringres = JSON.stringify(jsonres);
-    showMsg("Position successfully saved.",false);
+    showMsg("Position successfully saved.", false);
     $("#position").val("");
     loadPositions();
 }
@@ -320,17 +349,17 @@ function showPosResult(jsonres) {
 // Get all positions
 function loadPositions() {
     //    consoleLog("loadpositions: loading positions");
-    submitAJAX("getpositions",null,showPositions);
+    submitAJAX("getpositions", null, showPositions);
 }
 
 // Render positions
 function showPositions(jsonres) {
     //    consoleLog("showpositions: " + JSON.stringify(jsonres));
     var positionsdata = jsonres.DATA;
-    
+
     var $positionsDiv = $("#positions");
     $positionsDiv.empty();
-    for (var i=0; i < positionsdata.length; i++) {
+    for (var i = 0; i < positionsdata.length; i++) {
         $positionsDiv.append(positionsdata[i].assignment).append("<br>");
     }
 }
@@ -350,13 +379,13 @@ function addMember() {
     var params = {
         "member": newposition
     };
-    submitAJAX("newmem",params,showMemresult);
+    submitAJAX("newmem", params, showMemresult);
 }
 
 // Render result of addPosition()
 function showMemResult(jsonres) {
     var stringres = JSON.stringify(jsonres);
-    showMsg("Member successfully saved.",false);
+    showMsg("Member successfully saved.", false);
     $("#member").val("");
     loadMembers();
 }
@@ -364,17 +393,17 @@ function showMemResult(jsonres) {
 // Get all members
 function loadMembers() {
     //    consoleLog("loadpositions: loading positions");
-    submitAJAX("getmembers",null,showMembers);
+    submitAJAX("getmembers", null, showMembers);
 }
 
 // Render positions
 function showMembers(jsonres) {
     //    consoleLog("showpositions: " + JSON.stringify(jsonres));
     var membersdata = jsonres.DATA;
-    
+
     var $membersDiv = $("#members");
     $membersDiv.empty();
-    for (var i=0; i < membersdata.length; i++) {
+    for (var i = 0; i < membersdata.length; i++) {
         $membersDiv.append(membersdata[i].givenname).append("<br>");
     }
 }
