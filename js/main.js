@@ -151,82 +151,68 @@ function renderCal() {
         select: function(start, end, allDay) {
             var title = prompt('Event Title:');
             if (title) {
-                $('#tcal').fullCalendar('renderEvent',
-                        {
-                            title: title,
-                            start: start,
-                            end: end,
-                            allDay: allDay
-                        },
-                true // make the event "stick"
-                        );
+                var tmpEvent = {
+                    "title": title,
+                    "start": start,
+                    "end": end,
+                    "allDay": allDay,
+                    "category": 1 // faked category for now
+                };
+                eventAction("save", tmpEvent);
             }
             $('#tcal').fullCalendar('unselect');
         },
         editable: true,
         defaultView: 'month',
         eventSources: [{
-            url: 'ajax.php',
-            type: 'POST',
-            data: {
-                func: 'getevents',
-                args: ''
-            },
-            error: function() {
-                showMsg("There was an error while fetching events!", true);
-            },
-            color: 'green', // a non-ajax option
-            textColor: 'white' // a non-ajax option
-        }],
-        eventRender: function(event, element) {
-            var startdatestamp = event.start.valueOf() / 1000;
-            var enddatestamp = 0;
-
-            if (event.end != null)
-                enddatestamp = event.end.valueOf() / 1000;
-            
-            var tmpEvent = {
-                "title": event.title,
-                "start": startdatestamp,
-                "end": enddatestamp,
-                "category": 1 // faked category for now
-            };
-
-            if (event.end != null) {
-                var enddatestamp = event.end.valueOf() / 1000;
-                tmpEvent.end = enddatestamp;
-            }
-
-            if (typeof event.eid == "undefined") {
-                saveEvent(tmpEvent);
-            }
-//            else {
-//                tmpEvent.eid = event.eid;
-//                updateEvent(tmpEvent);
-//            }
-        } ,
+                url: 'ajax.php',
+                type: 'POST',
+                data: {
+                    func: 'getevents',
+                    args: ''
+                },
+                error: function() {
+                    showMsg("There was an error while fetching events!", true);
+                },
+                color: 'green', // a non-ajax option
+                textColor: 'white' // a non-ajax option
+            }],
         eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
             if (typeof event.eid != "undefined") {
-                var startdatestamp = event.start.valueOf() / 1000;
-                var enddatestamp = 0;
-                
-                if (event.allDay == false && event.end == null)
-                    enddatestamp = startdatestamp + (7200);   // fullCalendar Defaults to two hours long
-                else if (event.allDay == false && event.end != null)
-                    enddatestamp = event.end.valueOf() / 1000;
-
-                var tmpEvent = {
-                    "eid": event.eid,
-                    "title": event.title,
-                    "start": startdatestamp,
-                    "end": enddatestamp,
-                    "category": 1 // faked category for now
-                };
-
-                updateEvent(tmpEvent);
+                eventAction("update", event);
             }
         }
     });
+}
+
+// Initiates an event action (save, update)
+function eventAction(action, event) {
+    var startdatestamp = event.start.valueOf() / 1000;
+    var enddatestamp = 0;
+    
+    if (typeof event.allDay == "undefined" || event.allDay == true)
+        enddatestamp = 0;
+    else if (typeof event.allDay != "undefined" && event.allDay == false) {
+        if (event.end == null)
+            enddatestamp = startdatestamp + (7200);   // fullCalendar Defaults to two hours long
+        else
+            enddatestamp = event.end.valueOf() / 1000;
+    }
+    
+    var tmpEvent = {
+        "title": event.title,
+        "start": startdatestamp,
+        "end": enddatestamp,
+        "category": 1 // faked category for now
+    };
+    
+    if (typeof event.eid != "undefined")
+        tmpEvent.eid = event.eid;
+    
+    if (action == "save")
+        saveEvent(tmpEvent);
+    else if (action == "update")
+        updateEvent(tmpEvent);
 }
 
 // Saves a calendar event to the DB
@@ -235,8 +221,6 @@ function saveEvent(eventObj) {
         "event": eventObj
     };
     submitAJAX("newevent", params, showEventResult);
-    $("#tcal").fullCalendar('removeEvents');
-    $("#tcal").fullCalendar('refetchEvents');
 }
 
 // Updates a calendar event in the DB
@@ -245,13 +229,12 @@ function updateEvent(eventObj) {
         "event": eventObj
     };
     submitAJAX("modevent", params, showEventResult);
-//    $("#tcal").fullCalendar('removeEvents');
-//    $("#tcal").fullCalendar('refetchEvents');
 }
 
 // Show result of event save
 function showEventResult(jsonres) {
-    //console.log(JSON.stringify(jsonres));
+    $("#tcal").fullCalendar('removeEvents');
+    $("#tcal").fullCalendar('refetchEvents');
 }
 
 // Submits login authentication request
