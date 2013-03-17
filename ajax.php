@@ -15,7 +15,8 @@ $functions = Array(
     'getemailtypes', 
     'gettelecomtypes', 
     'newevent', 
-    'modevent');
+    'modevent',
+    'delevent');
 
 /*
  * We only allow this method
@@ -158,6 +159,12 @@ function newevent($args) {
 function modevent($args) {
     $eventObj = (object) $args["event"];
     return json_encode(updateEvent($eventObj));
+}
+
+// Updates the incoming event
+function delevent($args) {
+    $eventObj = (object) $args["event"];
+    return json_encode(removeEvent($eventObj));
 }
 
 /*

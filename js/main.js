@@ -181,6 +181,12 @@ function renderCal() {
             if (typeof event.eid != "undefined") {
                 eventAction("update", event);
             }
+        },
+        eventClick: function(event, jsEvent, view) {
+            if (typeof event.eid != "undefined") {
+                var result = confirm('Delete event "' + event.title + '" ?');
+                eventAction("delete", event);
+            }
         }
     });
 }
@@ -189,7 +195,7 @@ function renderCal() {
 function eventAction(action, event) {
     var startdatestamp = event.start.valueOf() / 1000;
     var enddatestamp = 0;
-    
+
     if (typeof event.allDay == "undefined" || event.allDay == true)
         enddatestamp = 0;
     else if (typeof event.allDay != "undefined" && event.allDay == false) {
@@ -198,21 +204,23 @@ function eventAction(action, event) {
         else
             enddatestamp = event.end.valueOf() / 1000;
     }
-    
+
     var tmpEvent = {
         "title": event.title,
         "start": startdatestamp,
         "end": enddatestamp,
         "category": 1 // faked category for now
     };
-    
+
     if (typeof event.eid != "undefined")
         tmpEvent.eid = event.eid;
-    
+
     if (action == "save")
         saveEvent(tmpEvent);
     else if (action == "update")
         updateEvent(tmpEvent);
+//    else if (action == "delete")
+//        deleteEvent(tmpEvent);
 }
 
 // Saves a calendar event to the DB
@@ -229,6 +237,14 @@ function updateEvent(eventObj) {
         "event": eventObj
     };
     submitAJAX("modevent", params, showEventResult);
+}
+
+// Deletes a calendar event in the DB
+function deleteEvent(eventObj) {
+    var params = {
+        "event": eventObj
+    };
+    submitAJAX("delevent", params, showEventResult);
 }
 
 // Show result of event save
