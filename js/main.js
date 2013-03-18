@@ -136,10 +136,10 @@ function showMsg(message, error) {
  * CALENDAR
  * 
  */
-// Generate fullCalendar object inside #tcal
+// Generate fullCalendar object inside #cal
 function renderCal() {
-    $('#tcal').empty();
-    $('#tcal').fullCalendar({
+    $('#cal').empty();
+    $('#cal').fullCalendar({
         // options
         header: {
             left: 'prev,next today',
@@ -160,7 +160,7 @@ function renderCal() {
                 };
                 eventAction("save", tmpEvent);
             }
-            $('#tcal').fullCalendar('unselect');
+            $('#cal').fullCalendar('unselect');
         },
         editable: true,
         defaultView: 'month',
@@ -183,9 +183,19 @@ function renderCal() {
             }
         },
         eventClick: function(event, jsEvent, view) {
+            //console.log(jsEvent);
             if (typeof event.eid != "undefined") {
-                var result = confirm('Delete event "' + event.title + '" ?');
-                eventAction("delete", event);
+                if (jsEvent.ctrlKey == true) {
+                    var result = confirm('Delete event "' + event.title + '" ?');
+                    if (result == true) eventAction("delete", event);
+                }
+                else {
+                    var title = prompt('Event Title:', event.title);
+                    if (title != "" && title != null) {   // Capture empty title and cancel button (null)
+                        event.title = title;
+                        eventAction("update", event);
+                    }
+                }
             }
         }
     });
@@ -219,8 +229,8 @@ function eventAction(action, event) {
         saveEvent(tmpEvent);
     else if (action == "update")
         updateEvent(tmpEvent);
-//    else if (action == "delete")
-//        deleteEvent(tmpEvent);
+    else if (action == "delete")
+        deleteEvent(tmpEvent);
 }
 
 // Saves a calendar event to the DB
@@ -244,13 +254,14 @@ function deleteEvent(eventObj) {
     var params = {
         "event": eventObj
     };
-    submitAJAX("delevent", params, showEventResult);
+    console.log('Event deletion is disabled.');
+    //submitAJAX("delevent", params, showEventResult);
 }
 
 // Show result of event save
 function showEventResult(jsonres) {
-    $("#tcal").fullCalendar('removeEvents');
-    $("#tcal").fullCalendar('refetchEvents');
+    $("#cal").fullCalendar('removeEvents');
+    $("#cal").fullCalendar('refetchEvents');
 }
 
 // Submits login authentication request

@@ -32,7 +32,9 @@
             <div id="troster" class="container_16">
                 <?php include 'pages/roster.php'; ?>
             </div>
-            <div id="tcal" class="container_16"></div>
+            <div id="tcal" class="container_16">
+                <?php include 'pages/calendar.php'; ?>
+            </div>
             <div id="tadmin" class="container_16">
                 <?php include 'pages/admin.php'; ?>
             </div>
