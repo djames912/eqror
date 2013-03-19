@@ -545,6 +545,58 @@ function addEvent($newEvent)
   return $r_val;
 }
 
+/* This function accepts an event object as an argument and then deletes the
+ * event matching the provided EID.  It returns whether or not the delete was
+ * successful.  If successful the number of rows removed from the database.  If
+ * unsuccessful the EID of the event passed in.
+ */
+function removeEvent($targetEvent)
+{
+  if(!is_object($targetEvent))
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Object expected.  Something else was passed.";
+  }
+  else
+  {
+    if(!isset($targetEvent->eid))
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Missing EID.  Unable to continue.";
+    }
+    else
+    {
+      try
+      {
+        $bldQuery = "DELETE FROM events WHERE eid='$targetEvent->eid';";
+        $dbLink = dbconnect();
+        $statement = $dbLink->prepare($bldQuery);
+        $statement->execute();
+        $affected_rows = $statement->rowCount();
+        if($affected_rows != 0)
+        {
+          $r_val['RSLT'] = "0";
+          $r_val['MSSG'] = "Event(s) successfully deleted.";
+          $r_val['DATA'] = $affected_rows;
+        }
+        else
+        {
+          $r_val['RSLT'] = "1";
+          $r_val['MSSG'] = "Unable to remove requested event.";
+          $r_val['DATA'] = $targetEvent->eid;
+        }
+      }
+      catch(PDOException $exception)
+      {
+        echo "Unable to delete event.";
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "Record delete failed: " . $exception->getMessage();
+      }
+    }
+  }
+  return $r_val;
+}
+
 /* This function accepts an event object that contains updated information as an
  * argument and then updates the database contents to match what is contained in
  * the object.
