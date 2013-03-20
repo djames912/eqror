@@ -183,13 +183,14 @@ function renderCal() {
             }
         },
         eventClick: function(event, jsEvent, view) {
-            //console.log(jsEvent);
+            // only allow editing of events with an eid property (from our db)
             if (typeof event.eid != "undefined") {
+                // Was Control key pressed when the event was clicked?  If so, this is a delete.
                 if (jsEvent.ctrlKey == true) {
                     var result = confirm('Delete event "' + event.title + '" ?');
                     if (result == true) eventAction("delete", event);
                 }
-                else {
+                else {  // No control key pressed, this is an edit.
                     var title = prompt('Event Title:', event.title);
                     if (title != "" && title != null) {   // Capture empty title and cancel button (null)
                         event.title = title;
@@ -254,8 +255,8 @@ function deleteEvent(eventObj) {
     var params = {
         "event": eventObj
     };
-    console.log('Event deletion is disabled.');
-    //submitAJAX("delevent", params, showEventResult);
+    //console.log('Event deletion is disabled.');
+    submitAJAX("delevent", params, showEventResult);
 }
 
 // Show result of event save
