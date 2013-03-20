@@ -212,6 +212,8 @@ function addMember($surName, $givenName, $middleName = NULL, $suffix = NULL, $pr
   }
   else
   {
+    if(is_null($preferred))
+      $preferred = $givenName;
     if(is_null($middleName)  && is_null($suffix))
       $tmpVar = checkMemberExists($surName, $givenName);
     elseif(is_null($middleName) && !is_null($suffix))
@@ -568,6 +570,8 @@ function removeEvent($targetEvent)
     {
       try
       {
+        if(!isset($targetEvent->end))
+          $targetEvent->end = "0";
         $bldQuery = "DELETE FROM events WHERE eid='$targetEvent->eid';";
         $dbLink = dbconnect();
         $statement = $dbLink->prepare($bldQuery);
