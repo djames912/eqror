@@ -124,6 +124,22 @@ CREATE TABLE `eventtypes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `indsubscribers`
+--
+
+DROP TABLE IF EXISTS `indsubscribers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `indsubscribers` (
+  `rn` int(11) NOT NULL AUTO_INCREMENT,
+  `eid` tinyint(4) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `rid` int(11) NOT NULL,
+  PRIMARY KEY (`rn`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `members`
 --
 
@@ -172,6 +188,22 @@ CREATE TABLE `positions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `possubscribers`
+--
+
+DROP TABLE IF EXISTS `possubscribers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `possubscribers` (
+  `rn` int(11) NOT NULL AUTO_INCREMENT,
+  `etid` tinyint(4) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `rid` int(11) NOT NULL,
+  PRIMARY KEY (`rn`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `reminders`
 --
 
@@ -183,22 +215,6 @@ CREATE TABLE `reminders` (
   `ts_value` double NOT NULL,
   `description` varchar(32) NOT NULL,
   PRIMARY KEY (`rid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `subscribers`
---
-
-DROP TABLE IF EXISTS `subscribers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `subscribers` (
-  `rn` int(11) NOT NULL AUTO_INCREMENT,
-  `eid` tinyint(4) NOT NULL,
-  `uid` int(11) NOT NULL,
-  `rid` int(11) NOT NULL,
-  PRIMARY KEY (`rn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -242,4 +258,4 @@ CREATE TABLE `telecomtypes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-03-10 16:35:33
+-- Dump completed on 2013-03-20 16:47:40
