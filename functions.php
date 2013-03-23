@@ -816,6 +816,69 @@ function addReminder($description, $period, $type = NULL)
   return $r_val;
 }
 
+/* This function adds data to the indsubscribers table.  It accepts an event ID,
+ * a user ID and a reminder ID as arguments.  It returns whether or not the database
+ * insert was successful or nt.
+ */
+function addIndividualSubscriber($eid, $uid, $rid)
+{
+  if(!(isset($eid) || isset($uid) || isset($rid)))
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  else
+  {
+    try
+    {
+      $bldQuery = "INSERT INTO indsubscribers(eid, uid, rid) VALUES('$eid', '$uid', '$rid');";
+      $dbLink = dbconnect();
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Insert into database successful.";
+    }
+    catch(PDOException $exception)
+    {
+      echo "Unable to insert data into the database.  Sorry";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Record insert failed: " . $exception->getMessage();
+    }
+  }
+  return $r_val;
+}
+
+/* This function accepts and event type ID, a position ID and a reminder ID as arguments
+ * and returns whether or not the database insert was successful or not.
+ */
+function addPositionSubscriber($etid, $pid, $rid)
+{
+  if(!(isset($etid) || isset($pid) || isset($rid)))
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  else
+  {
+    try
+    {
+      $bldQuery = "INSERT INTO possubscribers(etid, pid, rid) VALUES('$etid', '$pid', '$rid');";
+      $dbLink = dbconnect();
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Insert into database successful.";
+    }
+    catch(PDOException $exception)
+    {
+      echo "Unable to insert data into the database.  Sorry";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Record insert failed: " . $exception->getMessage();
+    }
+  }
+  return $r_val;
+}
+
 /* This function accepts an abbreviated month name (e.g. JAN, FEB) and converts it
  * to a digit which it then returns.
  */
