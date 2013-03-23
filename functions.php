@@ -773,6 +773,49 @@ function getPositionID($assignment)
   return $r_val;
 }
 
+/* This function adds a reminder period to the reminders table.  It accepts as arguments
+ * a description, a period of time and a type.  The type must be designated in minutes,
+ * hours or days.  If no type is designated then the the default of hours will be used.
+ * It returns whether or not the reminder was successfully added to the database.
+ */
+function addReminder($description, $period, $type = NULL)
+{
+  $multiplier = 0;
+  if(!(isset($description) || isset($period)))
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  else
+  {
+    if(is_null($type))
+      $multiplier = 3600;
+    elseif($type == "minutes")
+      $multiplier = 60;
+    elseif($type == "hours")
+      $multiplier = 3600;
+    else
+      $multiplier = 86400;
+    $insertValue = ($period * $multiplier);
+    try
+    {
+      $bldQuery = "INSERT INTO reminders(ts_value, description) VALUES('$insertValue', '$description');";
+      $dbLink = dbconnect();
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Insert into database successful.";
+    }
+    catch(PDOException $exception)
+    {
+      echo "Unable to insert data into the database.  Sorry";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Record insert failed: " . $exception->getMessage();
+    }
+  }
+  return $r_val;
+}
+
 /* This function accepts an abbreviated month name (e.g. JAN, FEB) and converts it
  * to a digit which it then returns.
  */
