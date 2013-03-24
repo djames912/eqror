@@ -260,6 +260,47 @@ function addMember($surName, $givenName, $middleName = NULL, $suffix = NULL, $pr
   return $r_val;
 }
 
+/* This function accepts a UID as an argument and returns an object containing all
+ * of the name data stored in the members table.
+ */
+function getMemberNames($uid)
+{
+  if(isset($uid))
+  {
+    try
+    {
+      $bldQuery = "SELECT * FROM members WHERE uid='$uid';";
+      $dbLink = dbconnect();
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $result = $statement->fetchObject();
+      if(!$result)
+      {
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "No member data found matching UID: $uid.";
+      }
+      else
+      {
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = "Data mound matching UID: $uid.";
+        $r_val['DATA'] = $result;
+      }
+    }
+    catch(PDOException $exception)
+    {
+      echo "Unable to retrieve requested data.  Sorry";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = $exception->getMessage();
+    }
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "UID expected but not received.";
+  }
+  return $r_val;
+}
+
 /* This function accepts up to four arguments, though only two are required and it
  * returns the UID of the member being looked for as part of the 'MSSG' member of
  * the array.
