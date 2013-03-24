@@ -733,6 +733,38 @@ function getMonthEvents($month = NULL, $year = NULL)
   return $r_val;
 }
 
+/* This function accepts a position ID as an argument and returns an array of UIDs
+ * that currently have that position assigned to them.
+ */
+function getPositionHolder($pid)
+{
+  if(isset($pid))
+  {
+    $bldQuery = "SELECT uid from posholders WHERE pid='$pid';";
+    $dbLink = dbconnect();
+    $statement = $dbLink->prepare($bldQuery);
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+    if(!$result)
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "No position holder found matching PID: $pid";
+    }
+    else
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Position holder(s) matching PID: $pid found.";
+      $r_val['DATA'] = $result;
+    }
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "No position ID passed.";
+  }
+  return $r_val;
+}
+
 /* This function accepts a position title and returns the ID for that title.
  */
 function getPositionID($assignment)
