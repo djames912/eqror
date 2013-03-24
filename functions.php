@@ -911,6 +911,51 @@ function addPositionSubscriber($etid, $pid, $rid)
   return $r_val;
 }
 
+/* This function accepts a UID as an argument and, optionally, whether or not only
+ * the preferred email addresses are wanted and returns the email address(es) that
+ * belong to that UID.
+ */
+function getEmailAddress($uid, $preferred = NULL)
+{
+  if(isset($uid))
+  {
+    if(is_null($preferred))
+      $bldQuery = "SELECT emailaddr FROM email WHERE uid='$uid';";
+    else
+      $bldQuery = "SELECT emailaddr FROM email WHERE uid='$uid' AND preferred='1';";
+    try
+    {
+      $dbLink = dbconnect();
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $result = $statement->fetchAll(PDO::FETCH_OBJ);
+      if(!$result)
+      {
+        $r_val['RSLT'] = "1";
+        $r_val['MSSG'] = "No email address found for UID: $uid";
+      }
+      else
+      {
+        $r_val['RSLT'] = "0";
+        $r_val['MSSG'] = "Email address(es) for UID: $uid found";
+        $r_val['DATA'] = $result;
+      }
+    }
+    catch(PDOException $exception)
+    {
+      echo "Unable to retrieve data from the database.  Sorry";
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Data retrieval failed: " . $exception->getMessage();
+    }
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "UID not passed.  Cannot continue.";
+  }
+  return $r_val;
+}
+
 /* This function accepts an abbreviated month name (e.g. JAN, FEB) and converts it
  * to a digit which it then returns.
  */
