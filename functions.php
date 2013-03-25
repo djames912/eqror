@@ -563,7 +563,7 @@ function addEvent($newEvent)
     {   
       if(!isset($newEvent->end))
         $newEvent->end = "0";
-      if(!isset($netEvent->rid))
+      if(!isset($newEvent->rid))
         $newEvent->rid = "0";
       try
       {
