@@ -924,9 +924,9 @@ function addIndividualSubscriber($eid, $uid, $rid)
 /* This function accepts and event type ID, a position ID and a reminder ID as arguments
  * and returns whether or not the database insert was successful or not.
  */
-function addPositionSubscriber($etid, $pid, $rid)
+function addEventTypeSubscriber($etid, $uid, $rid)
 {
-  if(!(isset($etid) || isset($pid) || isset($rid)))
+  if(!(isset($etid) || isset($uid) || isset($rid)))
   {
     $r_val['RSLT'] = "1";
     $r_val['MSSG'] = "Incomplete data set passed.";
@@ -935,7 +935,7 @@ function addPositionSubscriber($etid, $pid, $rid)
   {
     try
     {
-      $bldQuery = "INSERT INTO possubscribers(etid, pid, rid) VALUES('$etid', '$pid', '$rid');";
+      $bldQuery = "INSERT INTO possubscribers(etid, uid, rid) VALUES('$etid', '$uid', '$rid');";
       $dbLink = dbconnect();
       $statement = $dbLink->prepare($bldQuery);
       $statement->execute();
