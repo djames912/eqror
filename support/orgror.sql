@@ -57,7 +57,7 @@ CREATE TABLE `addresstypes` (
   `typeid` tinyint(4) NOT NULL AUTO_INCREMENT,
   `label` varchar(32) NOT NULL,
   PRIMARY KEY (`typeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +74,7 @@ CREATE TABLE `email` (
   `typeid` tinyint(4) NOT NULL,
   `preferred` tinyint(4) NOT NULL,
   PRIMARY KEY (`rn`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,7 +88,7 @@ CREATE TABLE `emailtypes` (
   `typeid` tinyint(4) NOT NULL AUTO_INCREMENT,
   `label` varchar(32) NOT NULL,
   PRIMARY KEY (`typeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +106,7 @@ CREATE TABLE `events` (
   `end` double NOT NULL,
   `category` tinyint(4) NOT NULL,
   PRIMARY KEY (`eid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,6 +120,22 @@ CREATE TABLE `eventtypes` (
   `typeid` tinyint(4) NOT NULL AUTO_INCREMENT,
   `label` varchar(32) NOT NULL,
   PRIMARY KEY (`typeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `eventtypesubscribers`
+--
+
+DROP TABLE IF EXISTS `eventtypesubscribers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `eventtypesubscribers` (
+  `rn` int(11) NOT NULL AUTO_INCREMENT,
+  `etid` tinyint(4) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `rid` int(11) NOT NULL,
+  PRIMARY KEY (`rn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -155,7 +171,7 @@ CREATE TABLE `members` (
   `preferred` varchar(8) NOT NULL,
   `password` varchar(64) NOT NULL,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,7 +186,7 @@ CREATE TABLE `posholders` (
   `uid` int(11) NOT NULL,
   `pid` tinyint(4) NOT NULL,
   PRIMARY KEY (`rn`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,23 +200,7 @@ CREATE TABLE `positions` (
   `id` tinyint(4) NOT NULL AUTO_INCREMENT,
   `assignment` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `possubscribers`
---
-
-DROP TABLE IF EXISTS `possubscribers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `possubscribers` (
-  `rn` int(11) NOT NULL AUTO_INCREMENT,
-  `etid` tinyint(4) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `rid` int(11) NOT NULL,
-  PRIMARY KEY (`rn`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +215,7 @@ CREATE TABLE `reminders` (
   `ts_value` double NOT NULL,
   `description` varchar(32) NOT NULL,
   PRIMARY KEY (`rid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -246,7 +246,7 @@ CREATE TABLE `telecomtypes` (
   `typeid` tinyint(4) NOT NULL AUTO_INCREMENT,
   `label` varchar(32) NOT NULL,
   PRIMARY KEY (`typeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -258,4 +258,4 @@ CREATE TABLE `telecomtypes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-03-20 16:47:40
+-- Dump completed on 2013-03-26 19:39:36
