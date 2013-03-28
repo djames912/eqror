@@ -1,3 +1,4 @@
 nbproject
 test.php
-dbconnectinfo.php
+configure.php.local
+dbconfig.php.local

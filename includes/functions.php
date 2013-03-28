@@ -2,7 +2,9 @@
 /* Require the connectdb.php file since it contains the necessary information to
  * make a connection to the database.
  */
-require_once "connectDB.php";
+
+// This line brings in dbconnect() with local configuration settings:
+require_once 'dbconfig.php.local';
 
 /* This is a generic function that pulls the entire contents of a table.  It accepts
  * as an argument the name of the table and returns an associative array of the
@@ -781,7 +783,7 @@ function getPositionHolder($pid)
 {
   if(isset($pid))
   {
-    $bldQuery = "SELECT uid from posholders WHERE pid='$pid';";
+    $bldQuery = "SELECT uid FROM posholders WHERE pid='$pid';";
     $dbLink = dbconnect();
     $statement = $dbLink->prepare($bldQuery);
     $statement->execute();
@@ -796,6 +798,38 @@ function getPositionHolder($pid)
       $r_val['RSLT'] = "0";
       $r_val['MSSG'] = "Position holder(s) matching PID: $pid found.";
       $r_val['DATA'] = $result;
+    }
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "No position ID passed.";
+  }
+  return $r_val;
+}
+
+/* This function accepts a position ID as an argument and returns the title of the
+ * position.
+ */
+function getPositionName($pid)
+{
+  if(isset($pid))
+  {
+    $bldQuery = "SELECT assignment FROM positions WHERE id='$pid';";
+    $dbLink = dbconnect();
+    $statement = $dbLink->prepare($bldQuery);
+    $statement->execute();
+    $result = $statement->fetchObject();
+    if(!$result)
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Position ID not found in database.";
+    }
+    else
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Position ID found in database.";
+      $r_val['DATA'] = $result->assignment;
     }
   }
   else

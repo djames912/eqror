@@ -1,6 +1,6 @@
 <?php
 
-require_once 'functions.php';
+require_once 'includes/functions.php';
 
 /*
  * A list of allowed calls
