@@ -5,6 +5,7 @@
 
 // This line brings in dbconnect() with local configuration settings:
 require_once 'dbconfig.php.local';
+require_once 'configure.php';
 
 /* This is a generic function that pulls the entire contents of a table.  It accepts
  * as an argument the name of the table and returns an associative array of the
@@ -696,7 +697,7 @@ function updateEvent($updatedEvent)
 function getMonthEvents($month = NULL, $year = NULL)
 {
   $goodData = 0;
-  date_default_timezone_set('US/Mountain');
+  //date_default_timezone_set('US/Mountain');
   if(is_null($month) && is_null($year))
   {
     $currentDate = getdate(time());
@@ -1031,40 +1032,36 @@ function getEmailAddress($uid, $preferred = NULL)
   return $r_val;
 }
 
-/* This function accepts an abbreviated month name (e.g. JAN, FEB) and converts it
- * to a digit which it then returns.
+/* This function accepts two arguments: a timestamp begin range and a timestamp end
+ * range.  It returns all events that fall between the timestamp ranges.
  */
-function monthToDigit($monthAbbrev)
+function getEventsByRange($timestampMin, $timeStampMax)
 {
-  date_default_timezone_set('US/Mountain');
-  $monthDigit = 0;
-  $monthLower = strtolower($monthAbbrev);
-  $monthCorrected = ucfirst($monthLower);
-  for($monthNum = 1; $monthNum <= 12; $monthNum++)
+  if(!(isset($timestampMin) || isset($timeStampMax)))
   {
-    if(date("M", mktime(0, 0, 0, $monthNum, 1, 0)) == $monthCorrected)
-    {
-      $monthDigit = $monthNum;
-    }
-  }
-  return $monthDigit;
-}
-
-/* This function accepts a string and a number of characters as arguments.  The
- * function then truncates the string to match the number of characters that are
- * provided.  The function returns the truncated string.
- */
-function truncateString($textString, $numChars)
-{
-  if(strlen($textString) > $numChars)
-  {
-    $truncatedString = substr($textString, 0, $numChars);
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
   }
   else
   {
-    $truncatedString = $textString;  
+    $bldQuery = "SELECT * FROM events WHERE start >= '$timestampMin' AND end <= '$timeStampMax';";
+    $dbLink = dbconnect();
+    $statement = $dbLink->prepare($bldQuery);
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+    if(!$result)
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "No events found matching provided timestamp range.";
+    }
+    else
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Events found matching provided timestamp ranges.";
+      $r_val['DATA'] = $result;
+    }
   }
-  return $truncatedString;
+  return $r_val;
 }
 
 ?>

@@ -5,6 +5,13 @@
  * values which are specified in the configure.php.local file will override
  * those contained in this file.
 */
+// Sets the default timezone:
+date_default_timezone_set('GMT');
+
+// Sets the default maximum number of days the event reminder program will use
+// to search for events.  This should be greater than or equal to the longest
+// reminder period that is set in the reminders table.
+$maxDays = 7;
 
 // REMOVE THE FOLLOWING LINES FROM THE configure.php.local file:
 include 'configure.php.local';

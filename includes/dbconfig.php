@@ -12,7 +12,7 @@
 function dbconnect()
 {
   $dbHost = "localhost";
-  $dbName = "orgror";
+  $dbName = "changeme";
   $dbUser = "changeme";
   $dbPass = "changeme";
   try
