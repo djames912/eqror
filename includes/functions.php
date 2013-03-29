@@ -970,7 +970,7 @@ function addEventTypeSubscriber($etid, $uid, $rid)
   {
     try
     {
-      $bldQuery = "INSERT INTO possubscribers(etid, uid, rid) VALUES('$etid', '$uid', '$rid');";
+      $bldQuery = "INSERT INTO eventtypesubscribers(etid, uid, rid) VALUES('$etid', '$uid', '$rid');";
       $dbLink = dbconnect();
       $statement = $dbLink->prepare($bldQuery);
       $statement->execute();
@@ -1064,4 +1064,35 @@ function getEventsByRange($timestampMin, $timeStampMax)
   return $r_val;
 }
 
+/* This function accepts an event type ID and returns the subscribers to that event
+ * type.
+ */
+function getEventTypeSubscribers($etid)
+{
+  if(!isset($etid))
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "No event type ID passed.";
+  }
+  else
+  {
+    $bldQuery = "SELECT uid, rid FROM eventtypesubscribers WHERE etid='$etid';";
+    $dbLink = dbconnect();
+    $statement = $dbLink->prepare($bldQuery);
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+    if(!$resutl)
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "No event type subscribers found matching event type ID.";
+    }
+    else
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Subscribers fround for the provided event type.";
+      $r_val['DATA'] = $result;
+    }
+  }
+  return $r_val;
+}
 ?>
