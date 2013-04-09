@@ -1081,7 +1081,7 @@ function getEventTypeSubscribers($etid)
     $statement = $dbLink->prepare($bldQuery);
     $statement->execute();
     $result = $statement->fetchAll(PDO::FETCH_OBJ);
-    if(!$resutl)
+    if(!$result)
     {
       $r_val['RSLT'] = "1";
       $r_val['MSSG'] = "No event type subscribers found matching event type ID.";
@@ -1090,6 +1090,38 @@ function getEventTypeSubscribers($etid)
     {
       $r_val['RSLT'] = "0";
       $r_val['MSSG'] = "Subscribers fround for the provided event type.";
+      $r_val['DATA'] = $result;
+    }
+  }
+  return $r_val;
+}
+
+/* This function accepts a reminder ID as an argument and returns the details of the
+ * reminder matching the provided ID.
+ */
+function getReminders($reminderID)
+{
+  if(!isset($reminderID))
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "No reminder ID passed.";
+  }
+  else
+  {
+    $bldQuery = "SELECT ts_value, description FROM reminders WHERE rid='$reminderID';";
+    $dbLink = dbconnect();
+    $statement = $dbLink->prepare($bldQuery);
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+    if(!result)
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "No reminders found matching reminder ID.";
+    }
+    else
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Reminders found matching the provided reminder ID.";
       $r_val['DATA'] = $result;
     }
   }
