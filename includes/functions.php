@@ -1113,7 +1113,7 @@ function getReminders($reminderID)
     $statement = $dbLink->prepare($bldQuery);
     $statement->execute();
     $result = $statement->fetchAll(PDO::FETCH_OBJ);
-    if(!result)
+    if(!$result)
     {
       $r_val['RSLT'] = "1";
       $r_val['MSSG'] = "No reminders found matching reminder ID.";

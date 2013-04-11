@@ -13,6 +13,11 @@ date_default_timezone_set('GMT');
 // reminder period that is set in the reminders table.
 $maxDays = 7;
 
+// Sets the variance in time stamp checking for reminders in seconds.  The larger the
+// variance the greater the more tolerant the reminder checking is.  It can be taken
+// too far which will cause sending duplicate reminders.
+$timeStampVariance = 10;
+
 // REMOVE THE FOLLOWING LINES FROM THE configure.php.local file:
 include 'configure.php.local';
 ?>
