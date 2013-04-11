@@ -5,8 +5,11 @@
  * A crontab entry should be made to run this file at least every 30 minutes.  Make
  * sure you match the run time with the minimum value that is allowed when setting up
  * the events themselves.
- * NOTE: You must adjust the path the functions.php file or this script will NOT
+ * NOTE: You must adjust the path to the functions.php file or this script will NOT
  * work!.
+ * 
+ * Also of note, this script currently only checks for subscribers by event type
+ * it will eventually support individual subscriber checks as well.
  */
 require_once '../includes/functions.php';
 $currentDate = array();
