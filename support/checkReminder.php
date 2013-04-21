@@ -29,7 +29,6 @@ foreach($eventList as $indEvent)
   $eventSubscribers = $tempSubscribers['DATA'];
   foreach($eventSubscribers as $indSubscriber)
   {
-    //print_r($indSubscriber);
     echo "Working on UID: " . $indSubscriber->uid;
     echo "\n";
     $tempMemberData = getMemberNames($indSubscriber->uid);
@@ -42,7 +41,6 @@ foreach($eventList as $indEvent)
     $convertedTime = date('l F j, Y: g:i a', $indEvent->start);
     foreach($reminderList as $indReminder)
     {
-      //print_r($indReminder);
       echo "Current Time Stamp: $currentTimeStamp";
       echo "\n";
       echo "Event Time Stamp: " . $indEvent->start;
