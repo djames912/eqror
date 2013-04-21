@@ -32,14 +32,22 @@ foreach($eventList as $indEvent)
     //print_r($indSubscriber);
     echo "Working on UID: " . $indSubscriber->uid;
     echo "\n";
+    $tempMemberData = getMemberNames($indSubscriber->uid);
+    $memberNameData = $tempMemberData['DATA'];
+    $memberName = $memberNameData->givenname . " " . $memberNameData->surname;
+    echo "Member Name: " . $memberName;
+    echo "\n";
     $tempReminders = getReminders($indSubscriber->rid);
     $reminderList = $tempReminders['DATA'];
+    $convertedTime = date('l F j, Y: g:i a', $indEvent->start);
     foreach($reminderList as $indReminder)
     {
       //print_r($indReminder);
       echo "Current Time Stamp: $currentTimeStamp";
       echo "\n";
       echo "Event Time Stamp: " . $indEvent->start;
+      echo "\n";
+      echo "Event Date/Time: " . $convertedTime;
       echo "\n";
       echo "Reminder Description: " . $indReminder->description;
       echo "\n";
@@ -65,6 +73,26 @@ foreach($eventList as $indEvent)
           {
             echo "Sending to: $emailAddress->emailaddr";
             echo "\n";
+            $mailRecipient = $memberName . " " . '<' . $emailAddress->emailaddr . '>';
+            $mailSubject = 'Reminder: ' . $indEvent->title;
+            $mailMessage = 'Hello ' . $memberName . ',' . "\r\n" .
+                'This an automated reminder ' . $indReminder->description .
+                ' in advance of ' . $indEvent->title . '.' . "\r\n" .
+                'Scheduled on: ' . $convertedTime . "\r\n\r\n" .
+                'Thank you.' . "\r\n" . 'EQRoR Program.' . "\r\n\r\n" .
+                'Please DO NOT reply to this reminder, your reply will bounce.';
+            $mailHeaders = 'From: eqror@weirdwares.net' . "\r\n" .
+                'Reply-To: eqror@weirdwares.net' . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+            echo "$mailRecipient";
+            echo "\n";
+            echo "$mailSubject";
+            echo "\n";
+            echo "$mailHeaders";
+            echo "\n";
+            echo "$mailMessage";
+            echo "\n\n";
+            mail($mailRecipient, $mailSubject, $mailMessage, $mailHeaders);
           }
         }
       }
