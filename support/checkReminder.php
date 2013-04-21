@@ -38,7 +38,7 @@ foreach($eventList as $indEvent)
     echo "\n";
     $tempReminders = getReminders($indSubscriber->rid);
     $reminderList = $tempReminders['DATA'];
-    $convertedTime = date('l F j, Y: g:i a', $indEvent->start);
+    $convertedTime = date('l F jS, Y \a\t g:i a', $indEvent->start);
     foreach($reminderList as $indReminder)
     {
       echo "Current Time Stamp: $currentTimeStamp";
