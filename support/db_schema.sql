@@ -105,6 +105,7 @@ CREATE TABLE `events` (
   `start` double NOT NULL,
   `end` double NOT NULL,
   `category` tinyint(4) NOT NULL,
+  `details` text,
   PRIMARY KEY (`eid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -120,22 +121,6 @@ CREATE TABLE `eventtypes` (
   `typeid` tinyint(4) NOT NULL AUTO_INCREMENT,
   `label` varchar(32) NOT NULL,
   PRIMARY KEY (`typeid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `eventtypesubscribers`
---
-
-DROP TABLE IF EXISTS `eventtypesubscribers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `eventtypesubscribers` (
-  `rn` int(11) NOT NULL AUTO_INCREMENT,
-  `etid` tinyint(4) NOT NULL,
-  `uid` int(11) NOT NULL,
-  `rid` int(11) NOT NULL,
-  PRIMARY KEY (`rn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -171,7 +156,7 @@ CREATE TABLE `members` (
   `preferred` varchar(8) NOT NULL,
   `password` varchar(64) NOT NULL,
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,6 +185,22 @@ CREATE TABLE `positions` (
   `id` tinyint(4) NOT NULL AUTO_INCREMENT,
   `assignment` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `possubscribers`
+--
+
+DROP TABLE IF EXISTS `possubscribers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `possubscribers` (
+  `rn` int(11) NOT NULL AUTO_INCREMENT,
+  `eid` tinyint(4) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `rid` int(11) NOT NULL,
+  PRIMARY KEY (`rn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -258,4 +259,4 @@ CREATE TABLE `telecomtypes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-03-26 19:39:36
+-- Dump completed on 2013-04-24 13:59:44

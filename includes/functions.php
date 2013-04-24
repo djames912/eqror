@@ -568,11 +568,13 @@ function addEvent($newEvent)
         $newEvent->end = "0";
       if(!isset($newEvent->rid))
         $newEvent->rid = "0";
+      if(!isset($newEvent->details))
+        $newEvent->details = "--None provided.--";
       try
       {
-        $bldQuery = "INSERT INTO events(rid, title, start, end, category)
+        $bldQuery = "INSERT INTO events(rid, title, start, end, category, details)
           VALUES('$newEvent->rid', '$newEvent->title', '$newEvent->start', '$newEvent->end', 
-            '$newEvent->category');";
+            '$newEvent->category', '$newEvent->details');";
         $dbLink = dbconnect();
         $statement = $dbLink->prepare($bldQuery);
         $statement->execute();
