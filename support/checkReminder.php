@@ -76,8 +76,9 @@ foreach($eventList as $indEvent)
             $mailMessage = 'Hello ' . $memberName . ',' . "\r\n" .
                 'This an automated reminder ' . $indReminder->description .
                 ' in advance of ' . $indEvent->title . '.' . "\r\n" .
-                'Scheduled on: ' . $convertedTime . "\r\n\r\n" .
-                'Thank you.' . "\r\n" . 'EQRoR Program.' . "\r\n\r\n" .
+                'Scheduled on: ' . $convertedTime . "\r\n" .
+                'Event details: ' . "\r\n" . $indEvent->details . "\r\n\r\n" .
+                'Thank you.' . "\r\n" . 'The EQROR Program.' . "\r\n\r\n" .
                 'Please DO NOT reply to this reminder, your reply will bounce.';
             $mailHeaders = 'From: eqror@weirdwares.net' . "\r\n" .
                 'Reply-To: eqror@weirdwares.net' . "\r\n" .
