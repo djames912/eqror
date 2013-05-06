@@ -1129,4 +1129,37 @@ function getReminders($reminderID)
   }
   return $r_val;
 }
+
+/* This function accepts an event ID as an argument and pulls out all the individuals
+ * who have subscribed to that event and returns their UIDs and reminder IDs as an
+ * array of objects.
+ */
+function getIndividualSubscribers($eid)
+{
+  if(isset($eid))
+  {
+    $bldQuery = "SELECT uid, rid FROM indsubscribers WHERE eid='$eid';";
+    $dbLink = dbconnect();
+    $statement = $dbLink->prepare($bldQuery);
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+    if(!$result)
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "No individual subscribers found matching EID.";
+    }
+    else
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Individuals who have subscribed to event.";
+      $r_val['DATA'] = $result;
+    }
+  }
+  else
+  {
+    $r_val['RSTL'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  return $r_val;
+}
 ?>
