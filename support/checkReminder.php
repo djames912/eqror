@@ -25,13 +25,23 @@ echo "Current Time Stamp: $currentTimeStamp";
 echo "\n";
 foreach($eventList as $indEvent)
 {
+  $runEventTypeLoop = false;
+  $runIndSubTypeLoop = false;
   echo '##########';
   echo "\n";
   echo "Checking Event: " . $indEvent->title;
   echo "\n";
-  $tempSubscribers = getEventTypeSubscribers($indEvent->category);
-  if($tempSubscribers['RSLT'] == "0")
+  $runGroup = getEventTypeSubscribers($indEvent->category);
+  $runIndividual = getIndividualSubscribers($indEvent->eid);
+  
+  if($runGroup['RSLT'] == "0")
+    $runEventTypeLoop = true;
+  if($runIndividual['RSLT'] == "0")
+    $runIndSubTypeLoop = true;
+  
+  if($runEventTypeLoop)
   {
+    $tempSubscribers = getEventTypeSubscribers($indEvent->category);
     $eventSubscribers = $tempSubscribers['DATA'];
     foreach($eventSubscribers as $indSubscriber)
     {
@@ -121,7 +131,7 @@ foreach($eventList as $indEvent)
     echo "##########";
     echo "\n";
   }
-  else
+  elseif($runIndSubTypeLoop)
   {
     echo 'Checking for individual subscribers for: ' . $indEvent->title;
     echo "\n";
@@ -211,6 +221,15 @@ foreach($eventList as $indEvent)
         }
       }
     }
+  }
+  else
+  {
+    echo 'There is something seriously wrong here!';
+    echo "\n";
+    echo "You shouldn't BE here!";
+    echo "\n";
+    echo 'Ending program run';
+    echo "\n";
   }
 }
 ?>
