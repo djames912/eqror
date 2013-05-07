@@ -1,0 +1,114 @@
+DROP TABLE IF EXISTS `address`;
+CREATE TABLE `address` (
+  `rn` integer primary key,
+  `uid` int(11) NOT NULL,
+  `addr1` varchar(32) NOT NULL,
+  `addr2` varchar(32) NOT NULL,
+  `city` varchar(32) NOT NULL,
+  `state` char(2) NOT NULL,
+  `zip` varchar(12) NOT NULL,
+  `typeid` tinyint(4) NOT NULL,
+  `preferred` tinyint(4) NOT NULL
+);
+
+
+DROP TABLE IF EXISTS `addresstypes`;
+CREATE TABLE `addresstypes` (
+  `typeid` integer primary key,
+  `label` varchar(32) NOT NULL
+);
+
+DROP TABLE IF EXISTS `email`;
+CREATE TABLE `email` (
+  `rn` integer primary key,
+  `uid` int(11) NOT NULL,
+  `emailaddr` varchar(32) NOT NULL,
+  `typeid` tinyint(4) NOT NULL,
+  `preferred` tinyint(4) NOT NULL
+);
+
+DROP TABLE IF EXISTS `emailtypes`;
+CREATE TABLE `emailtypes` (
+  `typeid` integer primary key,
+  `label` varchar(32) NOT NULL
+);
+
+DROP TABLE IF EXISTS `events`;
+CREATE TABLE `events` (
+  `eid` integer primary key,
+  `rid` varchar(32) NOT NULL,
+  `title` varchar(32) NOT NULL,
+  `start` double NOT NULL,
+  `end` double NOT NULL,
+  `category` tinyint(4) NOT NULL,
+  `details` text
+);
+
+DROP TABLE IF EXISTS `eventtypes`;
+CREATE TABLE `eventtypes` (
+  `typeid` integer primary key,
+  `label` varchar(32) NOT NULL
+);
+
+DROP TABLE IF EXISTS `indsubscribers`;
+CREATE TABLE `indsubscribers` (
+  `rn` integer primary key ,
+  `eid` tinyint(4) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `rid` int(11) NOT NULL
+);
+
+DROP TABLE IF EXISTS `members`;
+CREATE TABLE `members` (
+  `uid` integer primary key,
+  `surname` varchar(32) NOT NULL,
+  `givenname` varchar(32) NOT NULL,
+  `middlename` varchar(32) NOT NULL,
+  `suffix` varchar(8) NOT NULL,
+  `preferred` varchar(8) NOT NULL,
+  `password` varchar(64) NOT NULL
+);
+
+DROP TABLE IF EXISTS `posholders`;
+CREATE TABLE `posholders` (
+  `rn` integer primary key,
+  `uid` int(11) NOT NULL,
+  `pid` tinyint(4) NOT NULL
+);
+
+DROP TABLE IF EXISTS `positions`;
+CREATE TABLE `positions` (
+  `id` integer primary key,
+  `assignment` varchar(32) NOT NULL
+);
+
+DROP TABLE IF EXISTS `possubscribers`;
+CREATE TABLE `possubscribers` (
+  `rn` integer primary key,
+  `eid` tinyint(4) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `rid` int(11) NOT NULL
+);
+
+DROP TABLE IF EXISTS `reminders`;
+CREATE TABLE `reminders` (
+  `rid` integer primary key,
+  `ts_value` double NOT NULL,
+  `description` varchar(32) NOT NULL
+);
+
+DROP TABLE IF EXISTS `telecom`;
+CREATE TABLE `telecom` (
+  `rn` integer primary key,
+  `uid` int(11) NOT NULL,
+  `number` varchar(16) NOT NULL,
+  `typeid` tinyint(4) NOT NULL,
+  `preferred` tinyint(4) NOT NULL
+);
+
+DROP TABLE IF EXISTS `telecomtypes`;
+CREATE TABLE `telecomtypes` (
+  `typeid` integer primary key ,
+  `label` varchar(32) NOT NULL
+);
+
