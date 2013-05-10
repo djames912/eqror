@@ -1162,4 +1162,76 @@ function getIndividualSubscribers($eid)
   }
   return $r_val;
 }
+
+/* This function accepts as arguments a file name, path to the file, the member name, the member
+ * email address, the subject of the email and the email message.  It returns whether or not the
+ * email was sent.
+ */
+function sendEmailAttachment($fileName, $filePath, $memberName, $memberEmail, $mailSubject, $mailMessage = NULL)
+{
+  if(is_null($mailMessage))
+    $mailMessage = "This space intentionally left blank.\r\n";
+  if(isset($fileName) && isset($filePath) && isset($memberName) && isset($memberEmail) && isset($mailSubject))
+  {
+    $mailRecipient = $memberName . " " . '<' . $memberEmail . '>';
+    $fullFile = $filePath . $fileName;
+    $fileSize = filesize($fullFile);
+    $handle = fopen($fullFile, "r");
+    $fileContent = fread($handle, $fileSize);
+    fclose($handle);
+    $codedContent = chunk_split(base64_encode($fileContent));
+    $fid = md5(uniqid(time()));
+    $name = basename($fullFile);
+    $mailHeaders = "From: eqror@weirdwares.net\r\n";
+    $mailHeaders .= "Reply-To: eqror@weirdwares.net\r\n";
+    $mailHeaders .= 'X-Mailer: PHP/' . phpversion();
+    $mailHeaders .= "MIME-Version: 1.0\r\n";
+    $mailHeaders .= "Content-Type: multipart/mixed; boundary=\"" . $fid . "\"\r\n\r\n";
+    $mailHeaders .= "This is a multi-part message in MIME format.\r\n";
+    $mailHeaders .= "--" . $fid . "\r\n";
+    $mailHeaders .= "Content-type:text/plain; charset=iso-8859-1\r\n";
+    $mailHeaders .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+    $mailHeaders .= "--" . $fid . "\r\n";
+    $mailHeaders .= "Content-Type: application/octet-stream; name=\"" . $fullFile . "\"\r\n";
+    $mailHeaders .= "Content-Transfer-Encoding: base64\r\n";
+    $mailHeaders .= "Content-Disposition: attachment; filename=\"" . $fullFile . "\"\r\n\r\n";
+    $mailHeaders .= $codedContent . "\r\n\r\n";
+    $mailHeaders .= "--" . $fid . "--";
+    if(mail($mailRecipient, $mailSubject, $mailMessage, $mailHeaders))
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Email message sent.";
+    }
+    else
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Email message send error.";
+    }
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  return $r_val;
+}
+
+/* This function accepts a member name, member email address, message subject and
+ * a message body as arguments and returns whether or not the email was sent.
+ */
+function sendEmail($memberName, $memberEmail, $mailSubject, $mailMessage = NULL)
+{
+  if(is_null($mailMessage))
+    $mailMessage = "This space intentionally left blank.\r\n";
+  if(isset($memberName) && isset($memberEmail) && isset($mailSubject))
+  {
+    $mailRecipient = $memberName . " " . '<' . $memberEmail . '>';
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  return $r_val;
+}
 ?>
