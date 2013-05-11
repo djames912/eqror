@@ -131,7 +131,8 @@ foreach($eventList as $indEvent)
     echo "##########";
     echo "\n";
   }
-  elseif($runIndSubTypeLoop)
+  
+  if($runIndSubTypeLoop)
   {
     echo 'Checking for individual subscribers for: ' . $indEvent->title;
     echo "\n";
@@ -222,7 +223,8 @@ foreach($eventList as $indEvent)
       }
     }
   }
-  else
+  
+  if(!$runGroup && !$runIndividual)
   {
     echo 'There is something seriously wrong here!';
     echo "\n";
