@@ -21,7 +21,7 @@ function getTableContents($tableName)
     $statement->execute();
     $r_val['RSLT'] = "0";
     $r_val['MSSG'] = "Data located in $tableName";
-    $r_val['DATA'] = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $r_val['DATA'] = $statement->fetchAll(PDO::FETCH_OBJ);
   }
   catch(PDOException $exception)
   {
