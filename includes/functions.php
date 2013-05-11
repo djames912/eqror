@@ -1182,9 +1182,8 @@ function sendEmailAttachment($fileName, $filePath, $memberName, $memberEmail, $m
     $codedContent = chunk_split(base64_encode($fileContent));
     $fid = md5(uniqid(time()));
     $name = basename($fullFile);
-    $mailHeaders = "From: eqror@weirdwares.net\r\n";
-    $mailHeaders .= "Reply-To: eqror@weirdwares.net\r\n";
-    $mailHeaders .= 'X-Mailer: PHP/' . phpversion();
+    $mailHeaders = 'From: ' . $emailFromAddress . "\r\n";
+    $mailHeaders .= 'Reply-To: ' . $emailReplyAddress . "\r\n";
     $mailHeaders .= "MIME-Version: 1.0\r\n";
     $mailHeaders .= "Content-Type: multipart/mixed; boundary=\"" . $fid . "\"\r\n\r\n";
     $mailHeaders .= "This is a multi-part message in MIME format.\r\n";
@@ -1197,6 +1196,7 @@ function sendEmailAttachment($fileName, $filePath, $memberName, $memberEmail, $m
     $mailHeaders .= "Content-Disposition: attachment; filename=\"" . $fullFile . "\"\r\n\r\n";
     $mailHeaders .= $codedContent . "\r\n\r\n";
     $mailHeaders .= "--" . $fid . "--";
+    $mailHeaders .= 'X-Mailer: PHP/' . phpversion();
     if(mail($mailRecipient, $mailSubject, $mailMessage, $mailHeaders))
     {
       $r_val['RSLT'] = "0";
@@ -1226,6 +1226,19 @@ function sendEmail($memberName, $memberEmail, $mailSubject, $mailMessage = NULL)
   if(isset($memberName) && isset($memberEmail) && isset($mailSubject))
   {
     $mailRecipient = $memberName . " " . '<' . $memberEmail . '>';
+    $mailHeaders = 'From: ' . $emailFromAddress . "\r\n";
+    $mailHeaders .= 'Reply-To: ' . $emailReplyAddress . "\r\n";
+    $mailHeaders .= 'X-Mailer: PHP/' . phpversion();
+    if(mail($mailRecipient, $mailSubject, $mailMessage, $mailHeaders))
+    {
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Email message sent.";
+    }
+    else
+    {
+      $r_val['RSLT'] = "1";
+      $r_val['MSSG'] = "Email message send error.";
+    }
   }
   else
   {

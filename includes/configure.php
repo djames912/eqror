@@ -8,6 +8,12 @@
 // Sets the default timezone:
 date_default_timezone_set('GMT');
 
+// Sets the email header information for email that is generated as part of this
+// system.
+$emailFromAddress = "example@example.com";
+$emailReplyToAddress = "example@example.com";
+$emailSignatureText = "Fill in your text here";
+
 // Sets the default maximum number of days the event reminder program will use
 // to search for events.  This should be greater than or equal to the longest
 // reminder period that is set in the reminders table.
