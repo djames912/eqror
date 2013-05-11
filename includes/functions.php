@@ -1167,7 +1167,7 @@ function getIndividualSubscribers($eid)
  * email address, the subject of the email and the email message.  It returns whether or not the
  * email was sent.
  */
-function sendEmailAttachment($fileName, $filePath, $memberName, $memberEmail, $mailSubject, $mailMessage = NULL)
+function sendEmailAttachment($emailFromAddress, $emailReplyToAddress, $fileName, $filePath, $memberName, $memberEmail, $mailSubject, $mailMessage = NULL)
 {
   if(is_null($mailMessage))
     $mailMessage = "This space intentionally left blank.\r\n";
@@ -1183,21 +1183,22 @@ function sendEmailAttachment($fileName, $filePath, $memberName, $memberEmail, $m
     $fid = md5(uniqid(time()));
     $name = basename($fullFile);
     $mailHeaders = 'From: ' . $emailFromAddress . "\r\n";
-    $mailHeaders .= 'Reply-To: ' . $emailReplyAddress . "\r\n";
+    $mailHeaders .= 'Reply-To: ' . $emailReplyToAddress . "\r\n";
+    $mailHeaders .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
     $mailHeaders .= "MIME-Version: 1.0\r\n";
     $mailHeaders .= "Content-Type: multipart/mixed; boundary=\"" . $fid . "\"\r\n\r\n";
     $mailHeaders .= "This is a multi-part message in MIME format.\r\n";
     $mailHeaders .= "--" . $fid . "\r\n";
-    $mailHeaders .= "Content-type:text/plain; charset=iso-8859-1\r\n";
+    $mailHeaders .= "Content-type:text/plain; charset=utf-8\r\n";
     $mailHeaders .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+    $mailHeaders .= $mailMessage . "\r\n";
     $mailHeaders .= "--" . $fid . "\r\n";
-    $mailHeaders .= "Content-Type: application/octet-stream; name=\"" . $fullFile . "\"\r\n";
+    $mailHeaders .= "Content-Type: application/octet-stream; name=\"" . $fileName . "\"\r\n";
     $mailHeaders .= "Content-Transfer-Encoding: base64\r\n";
-    $mailHeaders .= "Content-Disposition: attachment; filename=\"" . $fullFile . "\"\r\n\r\n";
+    $mailHeaders .= "Content-Disposition: attachment; filename=\"" . $fileName . "\"\r\n\r\n";
     $mailHeaders .= $codedContent . "\r\n\r\n";
     $mailHeaders .= "--" . $fid . "--";
-    $mailHeaders .= 'X-Mailer: PHP/' . phpversion();
-    if(mail($mailRecipient, $mailSubject, $mailMessage, $mailHeaders))
+    if(mail($mailRecipient, $mailSubject, "", $mailHeaders))
     {
       $r_val['RSLT'] = "0";
       $r_val['MSSG'] = "Email message sent.";
@@ -1219,7 +1220,7 @@ function sendEmailAttachment($fileName, $filePath, $memberName, $memberEmail, $m
 /* This function accepts a member name, member email address, message subject and
  * a message body as arguments and returns whether or not the email was sent.
  */
-function sendEmail($memberName, $memberEmail, $mailSubject, $mailMessage = NULL)
+function sendEmail($emailFromAddress, $emailReplyToAddress, $memberName, $memberEmail, $mailSubject, $mailMessage = NULL)
 {
   if(is_null($mailMessage))
     $mailMessage = "This space intentionally left blank.\r\n";
@@ -1227,7 +1228,7 @@ function sendEmail($memberName, $memberEmail, $mailSubject, $mailMessage = NULL)
   {
     $mailRecipient = $memberName . " " . '<' . $memberEmail . '>';
     $mailHeaders = 'From: ' . $emailFromAddress . "\r\n";
-    $mailHeaders .= 'Reply-To: ' . $emailReplyAddress . "\r\n";
+    $mailHeaders .= 'Reply-To: ' . $emailReplyToAddress . "\r\n";
     $mailHeaders .= 'X-Mailer: PHP/' . phpversion();
     if(mail($mailRecipient, $mailSubject, $mailMessage, $mailHeaders))
     {
