@@ -32,6 +32,45 @@ function getTableContents($tableName)
   return $r_val;
 }
 
+/* This function gets the information regarding the names and types of the columns
+ * in a given table.  It expects a table name as an argument and returns an associative
+ * array using the column name as the key and the type as the value.
+ */
+function getTableInfo($tableName)
+{
+  $fieldData = array();
+  if(isset($tableName))
+  {
+    try
+    {
+      $dbLink = dbconnect();
+      $bldQuery = "DESCRIBE $tableName;";
+      $statement = $dbLink->prepare($bldQuery);
+      $statement->execute();
+      $result = $statement->fetchAll(PDO::FETCH_OBJ);
+      foreach($result as $indColumn)
+      {
+        $fieldData[$indColumn->Field] = $indColumn->Type;
+      }
+      $r_val['RSLT'] = "0";
+      $r_val['MSSG'] = "Details for table $tableName";
+      $r_val['DATA'] = $fieldData;
+    }
+    catch(PDOException $exception)
+    {
+      echo "Oooops.  Unable to retrieve your data.";
+      $r_val['RSLT'] =  "1"; 
+      $r_val['MSSG'] = $exception->getMessage();
+    }
+  }
+  else
+  {
+    $r_val['RSLT'] = "1";
+    $r_val['MSSG'] = "Incomplete data set passed.";
+  }
+  return $r_val;
+}
+
 /* This function checks to see if a given value already exists in a given table
  * It accepts three arguments: the table name, the colum name and the value being
  * searched for.  This function may be expanded on and made to be more sophisticated
@@ -1058,7 +1097,7 @@ function getEventsByRange($timestampMin, $timeStampMax)
     }
     else
     {
-      $r_val['RSLT'] = "0";
+      $r_val['RSLT'] = "0newEmptyPHPWebPage";
       $r_val['MSSG'] = "Events found matching provided timestamp ranges.";
       $r_val['DATA'] = $result;
     }
