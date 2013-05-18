@@ -16,7 +16,8 @@ $functions = Array(
     'gettelecomtypes', 
     'newevent', 
     'modevent',
-    'delevent');
+    'delevent',
+    'getform');
 
 /*
  * We only allow this method
@@ -165,6 +166,25 @@ function modevent($args) {
 function delevent($args) {
     $eventObj = (object) $args["event"];
     return json_encode(removeEvent($eventObj));
+}
+
+function getform($args) {
+	$tablename = null;
+	switch ($args['formname']) {
+		case "position":
+			$tablename = 'positions';
+			break;
+		case "member":
+			$tablename = 'members';
+			break;
+	}
+	
+	if ($tablename !== null) {
+		$tableStruct = getTableInfo($tablename);
+		return json_encode($tableStruct);
+	} else {
+		genErr("Unknown field name");
+	}
 }
 
 /*

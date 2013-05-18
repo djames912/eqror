@@ -3,3 +3,4 @@ test.php
 configure.php.local
 dbconfig.php.local
 .sqlitedb
+jtest.php

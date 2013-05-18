@@ -58,9 +58,27 @@ function getTableInfo($tableName)
     }
     catch(PDOException $exception)
     {
-      echo "Oooops.  Unable to retrieve your data.";
-      $r_val['RSLT'] =  "1"; 
-      $r_val['MSSG'] = $exception->getMessage();
+	  try
+	  {
+		  $dbLink = dbconnect();
+		  $bldQuery = "PRAGMA table_info(" . $tableName . ")";
+		  $statement = $dbLink->prepare($bldQuery);
+		  $statement->execute();
+		  $result = $statement->fetchAll(PDO::FETCH_OBJ);
+		  foreach($result as $indColumn)
+		  {
+			$fieldData[$indColumn->name] = $indColumn->type;
+		  }
+		  $r_val['RSLT'] = "0";
+		  $r_val['MSSG'] = "Details for table $tableName";
+		  $r_val['DATA'] = $fieldData;
+	  }
+	  catch(PDOException $exception)
+	  {
+		  echo "Oooops.  Unable to retrieve your data.";
+		  $r_val['RSLT'] =  "1"; 
+		  $r_val['MSSG'] = $exception->getMessage();
+      }
     }
   }
   else

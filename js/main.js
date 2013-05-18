@@ -375,6 +375,45 @@ function showPositions(jsonres) {
     }
 }
 
+// Fetch form fields
+function getFormFields(formname) {
+	var ajaxFunc = "";
+	var params = {
+        "formname": null
+    };
+	switch(formname) {
+		case "positions":
+		  params.formname = "position";
+		  break;
+		case "members":
+		  params.formname = "member";
+		  break;
+		default:
+		  return;
+	}
+	submitAJAX("getform", params, buildForm);
+}
+
+// Build form
+function buildForm(jsonres) {
+	var formfielddata = jsonres.DATA;
+	var $dialogDiv = $( "#dialog-form" );
+	
+	// Loop over form and present add fields
+	$dialogDiv.empty();
+	for (var prop in formfielddata) {
+		var type = formfielddata[prop];
+		var $newlabel = $( "<label />" );
+		$newlabel.attr('for', prop);
+		$newlabel.text(prop);
+		var $newfield = $( "<input />" );
+		$newfield.attr('type', 'text');
+		$newfield.attr('id', prop);
+		
+		$dialogDiv.append($newlabel);
+		$dialogDiv.append($newfield).append('<br />');
+	}
+}
 
 
 
