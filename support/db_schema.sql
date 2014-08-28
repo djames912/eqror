@@ -42,6 +42,7 @@ CREATE TABLE `address` (
   `zip` varchar(12) NOT NULL,
   `typeid` tinyint(4) NOT NULL,
   `preferred` tinyint(4) NOT NULL,
+  `active` tinyint(4) NOT NULL,
   PRIMARY KEY (`rn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -73,6 +74,7 @@ CREATE TABLE `email` (
   `emailaddr` varchar(32) NOT NULL,
   `typeid` tinyint(4) NOT NULL,
   `preferred` tinyint(4) NOT NULL,
+  `active` tinyint(4) NOT NULL,
   PRIMARY KEY (`rn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -232,6 +234,7 @@ CREATE TABLE `telecom` (
   `number` varchar(16) NOT NULL,
   `typeid` tinyint(4) NOT NULL,
   `preferred` tinyint(4) NOT NULL,
+  `active` tinyint(4) NOT NULL,
   PRIMARY KEY (`rn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
