@@ -1251,7 +1251,7 @@ function sendEmailAttachment($emailFromAddress, $emailReplyToAddress, $fileName,
     $mailHeaders .= $mailMessage . "\r\n";
     $mailHeaders .= "--" . $fid . "\r\n";
     $mailHeaders .= "Content-Type: application/octet-stream; name=\"" . $fileName . "\"\r\n";
-    $mailHeaders .= "Content-Transfer-Encoding: base64\r\n";
+    $mailHeaders .= "Content-Transfer-Encoding: 7bit\r\n";
     $mailHeaders .= "Content-Disposition: attachment; filename=\"" . $fileName . "\"\r\n\r\n";
     $mailHeaders .= $codedContent . "\r\n\r\n";
     $mailHeaders .= "--" . $fid . "--";
