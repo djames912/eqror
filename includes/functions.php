@@ -16,7 +16,14 @@ function getTableContents($tableName)
   try
   {
     $dbLink = dbconnect();
-    $bldQuery = "SELECT * FROM $tableName;";
+    if($tableName = "members")
+    {
+      $bldQuery = "SELECT * FROM members ORDER BY surname ASC;";
+    }
+    else
+    {
+      $bldQuery = "SELECT * FROM $tableName;";
+    }
     $statement = $dbLink->prepare($bldQuery);
     $statement->execute();
     $r_val['RSLT'] = "0";
