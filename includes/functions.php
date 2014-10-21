@@ -16,7 +16,7 @@ function getTableContents($tableName)
   try
   {
     $dbLink = dbconnect();
-    if($tableName = "members")
+    if($tableName == "members")
     {
       $bldQuery = "SELECT * FROM members ORDER BY surname ASC;";
     }

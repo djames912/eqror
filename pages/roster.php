@@ -4,7 +4,7 @@
  */
   require_once 'includes/functions.php';
   $rosterData = getTableContents('members');
-  $runRosterLoop = $rosterData['RSLT']
+  $runRosterLoop = $rosterData['RSLT'];
 ?>
 <h2>Roster</h2>
 <div class="container_16 rfamily_header">
