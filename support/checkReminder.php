@@ -74,7 +74,7 @@ foreach($eventList as $indEvent)
         {
           echo "Reminder Triggered.";
           echo "\n";
-          $tempData = getEmailAddress($indSubscriber->uid, 'Yes');
+          $tempData = getEmailAddress($indSubscriber->uid, '1', 'Yes');
           if($tempData['RSLT'] == "1")
           {
             echo $tempData['MSSG'];
@@ -167,7 +167,7 @@ foreach($eventList as $indEvent)
           {
             echo '*** Reminder Triggered ***';
             echo "\n";
-            $tempEmailData = getEmailAddress($indSubscriberList->uid, 'Yes');
+            $tempEmailData = getEmailAddress($indSubscriberList->uid, '1', 'Yes');
             if($tempEmailData['RSLT'] == "1")
             {
               echo $tempData['MSSG'];

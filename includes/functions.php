@@ -1053,18 +1053,21 @@ function addEventTypeSubscriber($etid, $uid, $rid)
   return $r_val;
 }
 
-/* This function accepts a UID as an argument and, optionally, whether or not only
- * the preferred email addresses are wanted and returns the email address(es) that
- * belong to that UID.
+/* This function accepts a UID and an active flag as an argument, and, optionally,
+ * a preferred flag.  If active is set to zero, the function will return all email
+ * addresses.  If the active flag is set to one (the default) then only active
+ * email addresses are returned.
  */
-function getEmailAddress($uid, $preferred = NULL)
+function getEmailAddress($uid, $active, $preferred = NULL)
 {
-  if(isset($uid))
+  if(isset($uid) && isset($active))
   {
-    if(is_null($preferred))
+    if(is_null($preferred) && $active == "0")
       $bldQuery = "SELECT emailaddr FROM email WHERE uid='$uid';";
+    elseif(is_null($preferred) && $active == "1")
+      $bldQuery = "SELECT emailaddr FROM email WHERE uid='$uid' AND active='1;";
     else
-      $bldQuery = "SELECT emailaddr FROM email WHERE uid='$uid' AND preferred='1';";
+      $bldQuery = "SELECT emailaddr FROM email WHERE uid='$uid' AND active='1' AND preferred='1';";
     try
     {
       $dbLink = dbconnect();
